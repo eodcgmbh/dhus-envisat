@@ -63,6 +63,25 @@
                        category="summary">
          </metadataType>
          
+         
+         <!-- footprint -->
+         
+         <metadataType id="GMLfootprint"
+                       name="Footprint"
+                       contentType="application/gml+xml"
+                       category="product">
+            <solrField name="gmlfootprint"
+                       type="string"/>
+         </metadataType>
+
+         <metadataType id="footprint"
+                       name="JTS footprint"
+                       contentType="application/jts"
+                       category="product">
+            <solrField name="footprint"
+                       type="location_rpt"/>
+         </metadataType>
+
          <!-- acquisition -->
 
          <metadataType id="beginPosition"
@@ -269,6 +288,108 @@
                           substring($inputDate, 21, 6),
                           "Z")              
          };
+         
+		 declare function local:lon360to180($lon360 as xs:double?) as xs:double?
+		 {
+		 	let $lon180 := ($lon360 + 180) mod 360
+	 		return ($lon180 - 180)
+	 	 };         
+	 	 
+	 	 declare function local:coordTrafo($coords as item()*, 
+							      $scale as xs:double?, 
+							      $offset as xs:double?,
+							      $islon as xs:boolean?) as item()*
+   		 {
+   		 let $count := count($coords)
+		 let $step := (
+					   if (xs:integer($count div 50) = 0)
+				       then 1
+					   else xs:integer($count div 50)
+					  )
+   		 let $items := (
+   	 		for $i at $index in $coords
+    			let $val := ($i*$scale+$offset)
+    			where $index mod $step = 0
+    			return 
+				    if ($islon)
+				    then (local:lon360to180($val))
+				    else  $val )
+    		return $items
+   		 };
+   		 
+	 	 declare function local:getGmlFootprint($lats as item()*, 
+	 	                                        $lons as item()*) as xs:string
+   		 {
+	   	 let $count := count($lats) 
+	   	 let $offset := 0.001
+		 return
+		 concat(
+			fn:string-join(
+		 		(
+				for $index in (1 to $count) 
+				return 
+				concat(local:truncateDecimal($lats[$index]),
+					   ",",
+					   local:truncateDecimal($lons[$index]))
+				)," "),
+			" ",
+			fn:string-join(
+				(
+				for $index in (1 to $count) 
+				let $i := xs:integer($count - $index + 1)
+				return 
+				concat(local:truncateDecimal($lats[$i] + $offset),
+					   ",",
+					   local:truncateDecimal($lons[$i] + $offset))
+				)," "),
+			" ",
+			local:truncateDecimal($lats[1]),
+			",",
+			local:truncateDecimal($lons[1])
+			)
+   		 };
+   		 
+	 	 declare function local:getJtsFootprint($lats as item()*, 
+	 	                                        $lons as item()*) as xs:string
+   		 {
+	   	 let $count := count($lats) 
+	   	 let $offset := 0.001
+		 return
+		 concat(
+            "POLYGON ((",
+			fn:string-join(
+		 		(
+				for $index in (1 to $count) 
+				return 
+				concat(local:truncateDecimal($lons[$index]),
+					   " ",
+					   local:truncateDecimal($lats[$index]))
+				),","),
+			",",
+			fn:string-join(
+				(
+				for $index in (1 to $count) 
+				let $i := xs:integer($count - $index + 1)
+				return 
+				concat(local:truncateDecimal($lons[$i] + $offset),
+					   " ",
+					   local:truncateDecimal($lats[$i] + $offset))
+				),","),
+			",",
+			local:truncateDecimal($lons[1]),
+			" ",
+			local:truncateDecimal($lats[1]),
+			"))"
+			)
+   		 };
+	 	                                   
+		 declare function local:truncateDecimal($num as xs:double?) as xs:string?
+		 {
+		    let $precision := 4
+			let $int := fn:tokenize(xs:string($num),'\.')[1]
+			let $dec := fn:substring(fn:tokenize(xs:string($num),'\.')[2],1,$precision)
+			return concat($int,".",$dec)
+		 };	 	                                   
 
          <!-- ============================================================== -->
          <!-- VARIABLES                                                      -->
@@ -307,6 +428,16 @@
          let $VAR_creationTime := local:computedateTime(
                  fn:data($root/attributes/*[name(.) = "creation_time"]))
 
+         let $VAR_lat_01 := fn:data($root/dataset/lat_01/time_01)
+         let $VAR_lon_01 := fn:data($root/dataset/lon_01/time_01)
+         let $VAR_lat_scale := xs:float(fn:data($root/variables/lat_01/attributes/scale_factor))
+         let $VAR_lon_scale := xs:float(fn:data($root/variables/lon_01/attributes/scale_factor))
+         let $VAR_lat_offset := xs:float(fn:data($root/variables/lat_01/attributes/add_offset))
+         let $VAR_lon_offset := xs:float(fn:data($root/variables/lon_01/attributes/add_offset))
+         
+         let $VAR_lats := local:coordTrafo($VAR_lat_01,$VAR_lat_scale,$VAR_lat_offset,xs:boolean("false"))
+         let $VAR_lons := local:coordTrafo($VAR_lon_01,$VAR_lon_scale,$VAR_lon_offset,xs:boolean("true"))
+         
          return
          (
 
@@ -340,6 +471,37 @@
          <metadata name="Date"
                    category="summary" type="text/date+iso8601">
          { $VAR_beginPosition }
+         </metadata>,
+      
+         <!-- GML FOOTPRINT -->
+         <metadata
+            queryable="GMLfootprint"
+            category="product"
+            name="Footprint"
+            type="application/gml+xml">
+            <gml:Polygon xmlns:gml="http://www.opengis.net/gml"
+               srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                <gml:outerBoundaryIs>
+                  <gml:LinearRing>
+                     <gml:coordinates>
+                        {
+                        local:getGmlFootprint($VAR_lats,$VAR_lons)
+                        }
+                     </gml:coordinates>
+                  </gml:LinearRing>
+               </gml:outerBoundaryIs>
+            </gml:Polygon>
+         </metadata>,
+         
+         <!-- JTS FOOTPRINT -->
+         <metadata
+            queryable="footprint"
+            category="product"
+            name="JTS footprint"
+            type="application/jts">
+                        {
+                        local:getJtsFootprint($VAR_lats,$VAR_lons)
+                        }
          </metadata>,
          
          <!-- acquisition -->
