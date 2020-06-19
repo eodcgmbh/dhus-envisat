@@ -1,0 +1,3088 @@
+<?xml version="1.0"?>
+<!--
+   Data Hub Service (DHuS) - For Space data distribution.
+   Copyright (C) 2019 GAEL Systems
+
+   This file is part of DHuS software sources.
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as
+   published by the Free Software Foundation, either version 3 of the
+   License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with this program. If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE rdf:RDF [
+   <!ENTITY rdf  "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+   <!ENTITY owl  "http://www.w3.org/2002/07/owl#">
+   <!ENTITY drb  "http://www.gael.fr/drb#">
+   <!ENTITY envisat "http://www.esa.int/envisat#"> 
+   <!ENTITY dhus "http://www.gael.fr/dhus#">
+   <!ENTITY img  "http://www.gael.fr/drb/image#">
+   <!ENTITY nc "http://www.unidata.ucar.edu/netcdf#">
+   ]>
+
+<rdf:RDF xmlns:owl  = "&owl;"
+         xmlns:rdf  = "&rdf;"
+         xmlns:rdfs = "&rdfs;"
+         xmlns:envisat = "&envisat;"
+         xmlns:drb  = "&drb;"
+         xmlns:nc   = "&nc;"
+         xmlns:dhus = "&dhus;"
+         xmlns:img  = "&img;"
+         xml:base   = "&envisat;">
+
+   <owl:Ontology rdf:about="&envisat;"/>
+
+   <!-- ENVISAT.RA2.GDR_2P and ENVISAT.RA2.MWS_2P  -->
+   <rdf:Description rdf:about="&envisat;productRA2_level2">
+      <dhus:metadataTypes rdf:parseType="Literal">
+		  
+         <metadataType id="satellite"
+                       name="Satellite"
+                       contentType="text/plain"
+                       category="summary">
+         </metadataType>
+         
+         <metadataType id="instrument"
+                       name="Instrument"
+                       contentType="text/plain"
+                       category="summary">
+         </metadataType>
+         
+         <metadataType id="date"
+                       name="Date"
+                       contentType="text/date+iso8601"
+                       category="summary">
+         </metadataType>
+         
+         
+         <!-- footprint -->
+         
+         <metadataType id="GMLfootprint"
+                       name="Footprint"
+                       contentType="application/gml+xml"
+                       category="product">
+            <solrField name="gmlfootprint"
+                       type="string"/>
+         </metadataType>
+
+         <metadataType id="footprint"
+                       name="JTS footprint"
+                       contentType="application/jts"
+                       category="product">
+            <solrField name="footprint"
+                       type="location_rpt"/>
+         </metadataType>
+
+         <!-- acquisition -->
+
+         <metadataType id="beginPosition"
+                       name="Sensing start"
+                       contentType="text/date+iso8601"
+                       category="product">
+            <solrField name="beginposition"
+                       type="tdate"/>
+         </metadataType>
+
+         <metadataType id="endPosition"
+                       name="Sensing stop"
+                       contentType="text/date+iso8601"
+                       category="product">
+            <solrField name="endposition"
+                       type="tdate"/>
+         </metadataType>
+         
+
+         <!-- platform -->
+
+         <metadataType id="platformName"
+                       name="Platform name"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformShortName"
+                       name="Platform short name"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformshortname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformSerialIdentifier"
+                       name="Platform serial identifier"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformserialidentifier"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformNssdcIdentifier"
+                       name="Platform NSSDC identifier"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformnssdcidentifier"
+                       type="text_general"/>
+         </metadataType>         
+
+         <!-- instrument -->
+
+         <metadataType id="instrumentName"
+                       name="Instrument name"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="instrumentname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="instrumentShortName"
+                       name="Instrument short name"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="instrumentshortname"
+                       type="text_general"/>
+         </metadataType>
+
+         <!-- orbit -->
+
+         <metadataType id="orbitNumber"
+                       name="Orbit number"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="orbitnumber"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="relativeOrbitNumber"
+                       name="Relative orbit number"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="relativeorbitnumber"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="cycle"
+                       name="Cycle"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="cycle"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="phase"
+                       name="Phase"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="phase"
+                       type="int"/>
+         </metadataType>
+
+         <!-- processing -->
+
+         <metadataType id="processingLevel"
+                       name="Processing level"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="processinglevel"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="generationTime"
+                       name="Generation time"
+                       contentType="text/plain"
+                       category="product">
+         </metadataType>                  
+         
+         <!-- other -->        
+         
+         <metadataType id="productType"
+                       name="Product type"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="producttype"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="productDescription"
+                       name="Product description"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="productdescription"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="size"
+                       name="Size"
+                       contentType="text/plain"
+                       category="summary">
+            <solrField name="size"
+                       type="string"/>
+         </metadataType>
+
+         <metadataType id="format"
+                       name="Format"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="format"
+                       type="string"
+                       required="true"/>
+         </metadataType>
+         
+         <metadataType id="filename"
+                       name="Filename"
+                       contentType="text/plain"
+                       category="summary">
+            <solrField name="filename"
+                       type="string"
+                       required="true"/>
+         </metadataType>
+         
+      </dhus:metadataTypes>
+   </rdf:Description>
+   
+   <!-- ENVISAT.RA2.GDR_2P and ENVISAT.RA2.MWS_2P  -->
+   <rdf:Description rdf:about="&envisat;productRA2_level2">
+      <dhus:support/>
+      <dhus:identifier rdf:parseType="Literal">
+      <![CDATA[
+         fn:tokenize(name (.), '\.')[1]
+      ]]>
+      </dhus:identifier>
+
+      <dhus:metadataExtractor  rdf:parseType="Literal">
+      <![CDATA[
+         <!-- ============================================================== -->
+         <!-- FUNCTIONS                                                      -->
+         <!-- ============================================================== -->
+
+         declare function local:computeSizes ($path, $base as item()*) as item()*
+         {
+            let $product := .
+            return
+               fn:data($product/@size)
+         };
+
+         declare function local:roundHalfDown($arg, $precision) as xs:double*
+         {
+            xs:integer((xs:double($arg)*math:power(10, $precision))) div
+               math:power(10, $precision)
+         };
+
+         declare function local:computedateTime ($inputDate as xs:string?) as xs:string
+         {
+            let $input := $inputDate
+            return concat(substring($inputDate, 1, 10),
+						  "T",
+              		      substring($inputDate, 12, 8),
+                          ".",
+                          substring($inputDate, 21, 6),
+                          "Z")              
+         };
+         
+		 declare function local:lon360to180($lon360 as xs:double?) as xs:double?
+		 {
+		 	let $lon180 := ($lon360 + 180) mod 360
+	 		return ($lon180 - 180)
+	 	 };         
+	 	 
+	 	 declare function local:coordTrafo($coords as item()*, 
+							      $scale as xs:double?, 
+							      $offset as xs:double?,
+							      $islon as xs:boolean?) as item()*
+   		 {
+   		 let $count := count($coords)
+		 let $step := (
+					   if (xs:integer($count div 50) = 0)
+				       then 1
+					   else xs:integer($count div 50)
+					  )
+   		 let $items := (
+   	 		for $i at $index in $coords
+    			let $val := ($i*$scale+$offset)
+    			where $index mod $step = 0
+    			return 
+				    if ($islon)
+				    then (local:lon360to180($val))
+				    else  $val )
+    		return $items
+   		 };
+   		 
+	 	 declare function local:getGmlFootprint($lats as item()*, 
+	 	                                        $lons as item()*) as xs:string
+   		 {
+	   	 let $count := count($lats) 
+	   	 let $offset := 0.001
+		 return
+		 concat(
+			fn:string-join(
+		 		(
+				for $index in (1 to $count) 
+				return 
+				concat(local:truncateDecimal($lats[$index]),
+					   ",",
+					   local:truncateDecimal($lons[$index]))
+				)," "),
+			" ",
+			fn:string-join(
+				(
+				for $index in (1 to $count) 
+				let $i := xs:integer($count - $index + 1)
+				return 
+				concat(local:truncateDecimal($lats[$i] + $offset),
+					   ",",
+					   local:truncateDecimal($lons[$i] + $offset))
+				)," "),
+			" ",
+			local:truncateDecimal($lats[1]),
+			",",
+			local:truncateDecimal($lons[1])
+			)
+   		 };
+   		 
+	 	 declare function local:getJtsFootprint($lats as item()*, 
+	 	                                        $lons as item()*) as xs:string
+   		 {
+	   	 let $count := count($lats) 
+	   	 let $offset := 0.001
+		 return
+		 concat(
+            "POLYGON ((",
+			fn:string-join(
+		 		(
+				for $index in (1 to $count) 
+				return 
+				concat(local:truncateDecimal($lons[$index]),
+					   " ",
+					   local:truncateDecimal($lats[$index]))
+				),","),
+			",",
+			fn:string-join(
+				(
+				for $index in (1 to $count) 
+				let $i := xs:integer($count - $index + 1)
+				return 
+				concat(local:truncateDecimal($lons[$i] + $offset),
+					   " ",
+					   local:truncateDecimal($lats[$i] + $offset))
+				),","),
+			",",
+			local:truncateDecimal($lons[1]),
+			" ",
+			local:truncateDecimal($lats[1]),
+			"))"
+			)
+   		 };
+	 	                                   
+		 declare function local:truncateDecimal($num as xs:double?) as xs:string?
+		 {
+		    let $precision := 4
+			let $int := fn:tokenize(xs:string($num),'\.')[1]
+			let $dec := fn:substring(fn:tokenize(xs:string($num),'\.')[2],1,$precision)
+			return concat($int,".",$dec)
+		 };	 	                                   
+
+         <!-- ============================================================== -->
+         <!-- VARIABLES                                                      -->
+         <!-- ============================================================== -->
+
+         let $name := name()
+
+         let $root := ./root
+         
+         let $VAR_title := fn:data($root/attributes/*[name(.) = "title"])
+         
+         let $VAR_missionId := fn:substring($name, 1, 3)
+         
+         let $VAR_dataSource := fn:substring($name, 5, 2)
+         
+         let $VAR_level := fn:substring($name, 8, 1)
+         
+         let $VAR_dataTypeId := fn:substring($name, 10, 6)
+         
+         let $VAR_orbitDurationSec := xs:integer(fn:substring($name, 65, 4))
+         
+         let $VAR_productGenerationCentre := fn:substring($name, 82, 3)
+         
+         let $VAR_classIdPlatform := fn:substring($name, 86, 1)
+         
+         let $VAR_classIdTimeliness := fn:substring($name, 88, 2)
+         
+         let $VAR_classIdBaseline := fn:substring($name, 91, 3)
+         
+         let $VAR_beginPosition := local:computedateTime(
+                 fn:data($root/attributes/*[name(.) = "sensing_start"]))
+                 
+         let $VAR_endPosition := local:computedateTime(
+                 fn:data($root/attributes/*[name(.) = "sensing_stop"]))
+                 
+         let $VAR_creationTime := local:computedateTime(
+                 fn:data($root/attributes/*[name(.) = "creation_time"]))
+
+         let $VAR_lat_01 := fn:data($root/dataset/lat_01/time_01)
+         let $VAR_lon_01 := fn:data($root/dataset/lon_01/time_01)
+         let $VAR_lat_scale := xs:float(fn:data($root/variables/lat_01/attributes/scale_factor))
+         let $VAR_lon_scale := xs:float(fn:data($root/variables/lon_01/attributes/scale_factor))
+         let $VAR_lat_offset := xs:float(fn:data($root/variables/lat_01/attributes/add_offset))
+         let $VAR_lon_offset := xs:float(fn:data($root/variables/lon_01/attributes/add_offset))
+         
+         let $VAR_lats := local:coordTrafo($VAR_lat_01,$VAR_lat_scale,$VAR_lat_offset,xs:boolean("false"))
+         let $VAR_lons := local:coordTrafo($VAR_lon_01,$VAR_lon_scale,$VAR_lon_offset,xs:boolean("true"))
+         
+         return
+         (
+
+         <!-- ============================================================== -->
+         <!-- EXTRACTIONS                                                    -->
+         <!-- ============================================================== -->
+
+         <!-- Indexed metadata -->
+
+         <!-- SATELLITE -->
+         <!--
+         {
+			  if ($VAR_missionId = "ENV")
+			  then "Envisat"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata name="Satellite"
+                   category="summary" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- INSTRUMENT -->
+         <!--
+         {
+			  if ($VAR_dataSource = "RA")
+			  then "RA2"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata name="Instrument"
+                   category="summary" type="text/plain">
+         RA2
+         </metadata>,
+         
+         <!-- DATE -->
+         <metadata name="Date"
+                   category="summary" type="text/date+iso8601">
+         { $VAR_beginPosition }
+         </metadata>,
+      
+         <!-- GML FOOTPRINT -->
+         <metadata
+            queryable="GMLfootprint"
+            category="product"
+            name="Footprint"
+            type="application/gml+xml">
+            <gml:Polygon xmlns:gml="http://www.opengis.net/gml"
+               srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                <gml:outerBoundaryIs>
+                  <gml:LinearRing>
+                     <gml:coordinates>
+                        {
+                        local:getGmlFootprint($VAR_lats,$VAR_lons)
+                        }
+                     </gml:coordinates>
+                  </gml:LinearRing>
+               </gml:outerBoundaryIs>
+            </gml:Polygon>
+         </metadata>,
+         
+         <!-- JTS FOOTPRINT -->
+         <metadata
+            queryable="footprint"
+            category="product"
+            name="JTS footprint"
+            type="application/jts">
+                        {
+                        local:getJtsFootprint($VAR_lats,$VAR_lons)
+                        }
+         </metadata>,
+         
+         <!-- acquisition -->
+
+         <!-- SENSING START -->
+         <metadata queryable="beginposition" name="Sensing start"
+                   category="product" type="text/date+iso8601">
+         { $VAR_beginPosition }
+         </metadata>,
+
+         <!-- SENSING STOP -->
+         <metadata queryable="endposition" name="Sensing stop"
+                   category="product" type="text/date+iso8601">
+         { $VAR_endPosition }
+         </metadata>,
+
+         <!-- platform -->
+
+         <!-- PLATFORM NAME -->
+         <!--
+         {
+			  if ($VAR_missionId = "ENV")
+			  then "Envisat"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="platformname" name="Platform name"
+                   category="platform" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- PLATFORM SHORT NAME -->
+         <!--
+         {
+			  if ($VAR_missionId = "ENV")
+			  then "Envisat"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="platformshortname" name="Platform short name"
+                   category="platform" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- PLATFORM SERIAL IDENTIFIER -->
+         <metadata queryable="platformserialidentifier" name="Platform serial identifier"
+                   category="platform" type="text/plain">
+            1
+         </metadata>,
+
+         <!-- PLATFORM NSSDC IDENTIFIER -->
+         <metadata queryable="platformnssdcidentifier" name="Platform NSSDC identifier"
+                   category="platform" type="text/plain">
+            2002-009A
+         </metadata>,
+
+         <!-- instrument -->
+
+         <!-- INSTRUMENT NAME -->
+         <!--
+         {
+			  if ($VAR_dataSource = "RA")
+			  then "Radar Altimeter 2"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="instrumentname" name="Instrument name"
+                   category="instrument" type="text/plain">
+         Radar Altimeter 2
+         </metadata>,
+
+         <!-- INSTRUMENT SHORT NAME -->
+         <!--
+         {
+			  if ($VAR_dataSource = "RA")
+			  then "RA2"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="instrumentshortname" name="Instrument short name"
+                   category="instrument" type="text/plain">
+         RA2
+         </metadata>,
+
+         <!-- orbit -->
+
+         <!-- ORBIT NUMBER -->
+         <metadata queryable="orbitnumber" name="Orbit number"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data($root/attributes/*[name(.) = "absolute_orbit_number"])) }
+         </metadata>,
+
+         <!-- RELATIVE ORBIT NUMBER -->
+         <metadata queryable="relativeorbitnumber" name="Relative orbit number"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data($root/attributes/*[name(.) = "orbit_number"])) }
+         </metadata>,
+
+         <!-- CYCLE -->
+         <metadata queryable="cycle" name="Cycle"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data($root/attributes/*[name(.) = "cycle_number"])) }
+         </metadata>,
+
+         <!-- PHASE -->
+         <metadata queryable="phase" name="Phase"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data($root/attributes/*[name(.) = "phase"])) }
+         </metadata>,
+
+         <!-- processing -->
+
+         <!-- PROCESSING LEVEL -->
+         <metadata queryable="processinglevel" name="Processing level"
+                   category="product" type="text/plain">
+         {
+			  if ($VAR_level = "2")
+			  then "Level-2"
+			  else "UNKNOWN"
+         }            
+         </metadata>,
+
+         <!-- GENERATION TIME -->
+         <metadata name="Generation time"
+                   category="product" type="text/plain">
+         { $VAR_creationTime }
+         </metadata>,
+
+         <!-- other -->
+
+         <!-- PRODUCT TYPE -->
+         <metadata queryable="producttype" name="Product type"
+                   category="product" type="text/plain">
+         { $VAR_dataTypeId }
+         </metadata>,
+
+         <!-- PRODUCT DESCRIPTION -->
+         <metadata queryable="productdescription" name="Product description"
+                   category="product" type="text/plain">
+         { $VAR_title }
+         </metadata>,
+
+         <!-- SIZE -->
+         <metadata queryable="size" name="Size"
+                   category="summary" type="text/plain">
+         {
+            let $size := xs:double(fn:sum(local:computeSizes(., ())))
+            let $kilo := 1024
+            let $mega := xs:integer($kilo * 1024)
+            let $giga := xs:integer($mega * 1024)
+            let $tera := xs:integer($giga * 1024)
+            let $kilo_size := local:roundHalfDown(($size div $kilo), 2)
+            let $mega_size := local:roundHalfDown(($size div $mega), 2)
+            let $giga_size := local:roundHalfDown(($size div $giga), 2)
+            let $tera_size := local:roundHalfDown(($size div $tera), 2)
+            return
+               if ($size < 1024)
+               then
+                  concat ($size, " bytes")
+               else
+                  if (($size div $kilo) < 1024)
+                  then
+                     concat ($kilo_size, " KB")
+                  else
+                     if (($size div $mega) < 1024)
+                        then
+                           concat ($mega_size, " MB")
+                     else
+                        if (($size div $giga) < 1024)
+                        then
+                           concat ($giga_size, " GB")
+                        else
+                           concat ($tera_size, " TB")
+         }
+         </metadata>,
+                  
+         <!-- FORMAT -->
+         <metadata queryable="format" name="Format"
+                   category="product" type="text/plain">
+         {
+            if (matches($name, "(?i).*nc"))
+            then "netCDF"
+            else "UNKNOWN"
+         }
+         </metadata>,
+         
+         <!-- FILENAME -->
+         <metadata queryable="filename" name="Filename"
+                   category="summary" type="text/plain">
+         { $name }
+         </metadata>
+
+         )
+      ]]>
+      </dhus:metadataExtractor>
+
+   </rdf:Description>
+   
+   
+   
+   
+   
+   
+<!--
+   BASED ON:
+   https://earth.esa.int/documents/700255/2042507/Vol05_Structures_3f_20150831_v1.pdf
+   https://earth.esa.int/c/document_library/get_file?folderId=231342&name=DLFE-2136.pdf
+   https://earth.esa.int/documents/700255/1834061/AMALFI_USER_MANUAL.pdf
+   https://earth.esa.int/documents/700255/2042507/AnnexA_Data_Convention_3g_20150831_v2.pdf
+-->
+   
+   <!-- ENVISAT.ASA_APM_1P, ENVISAT.ASA_IMM_1P and ENVISAT.ASA_WSM_1P  -->
+   <rdf:Description rdf:about="&envisat;productASAR_image">
+      <dhus:metadataTypes rdf:parseType="Literal">
+		  
+         <metadataType id="satellite"
+                       name="Satellite"
+                       contentType="text/plain"
+                       category="summary">
+         </metadataType>
+         
+         <metadataType id="instrument"
+                       name="Instrument"
+                       contentType="text/plain"
+                       category="summary">
+         </metadataType>
+         
+         <metadataType id="date"
+                       name="Date"
+                       contentType="text/date+iso8601"
+                       category="summary">
+         </metadataType>
+         
+         
+         <!-- acquisition -->
+
+         <metadataType id="beginPosition"
+                       name="Sensing start"
+                       contentType="text/date+iso8601"
+                       category="product">
+            <solrField name="beginposition"
+                       type="tdate"/>
+         </metadataType>
+
+         <metadataType id="endPosition"
+                       name="Sensing stop"
+                       contentType="text/date+iso8601"
+                       category="product">
+            <solrField name="endposition"
+                       type="tdate"/>
+         </metadataType>
+         
+         
+         <!-- footprint -->
+         
+<!--
+         <metadataType id="GMLfootprint"
+                       name="Footprint"
+                       contentType="application/gml+xml"
+                       category="product">
+            <solrField name="gmlfootprint"
+                       type="string"/>
+         </metadataType>
+
+         <metadataType id="footprint"
+                       name="JTS footprint"
+                       contentType="application/jts"
+                       category="product">
+            <solrField name="footprint"
+                       type="location_rpt"/>
+         </metadataType>
+-->
+
+         <!-- platform -->
+
+         <metadataType id="platformName"
+                       name="Platform name"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformShortName"
+                       name="Platform short name"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformshortname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformSerialIdentifier"
+                       name="Platform serial identifier"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformserialidentifier"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformNssdcIdentifier"
+                       name="Platform NSSDC identifier"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformnssdcidentifier"
+                       type="text_general"/>
+         </metadataType>         
+
+         <!-- instrument -->
+
+         <metadataType id="instrumentName"
+                       name="Instrument name"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="instrumentname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="instrumentShortName"
+                       name="Instrument short name"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="instrumentshortname"
+                       type="text_general"/>
+         </metadataType>
+
+         <!-- orbit -->
+
+         <metadataType id="orbitNumber"
+                       name="Orbit number"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="orbitnumber"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="relativeOrbitNumber"
+                       name="Relative orbit number"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="relativeorbitnumber"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="cycle"
+                       name="Cycle"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="cycle"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="phase"
+                       name="Phase"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="phase"
+                       type="int"/>
+         </metadataType>
+         
+         <metadataType id="orbitDirection"
+                       name="Orbit direction"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="orbitdirection"
+                       type="text_general"/>
+         </metadataType>
+
+         <!-- processing -->
+
+         <metadataType id="processingLevel"
+                       name="Processing level"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="processinglevel"
+                       type="text_general"/>
+         </metadataType>
+                  
+         <!-- other -->      
+         
+         <metadataType id="productType"
+                       name="Product type"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="producttype"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="productDescription"
+                       name="Product description"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="productdescription"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="size"
+                       name="Size"
+                       contentType="text/plain"
+                       category="summary">
+            <solrField name="size"
+                       type="string"/>
+         </metadataType>
+         
+         <metadataType id="format"
+                       name="Format"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="format"
+                       type="string"
+                       required="true"/>
+         </metadataType>
+         
+         <metadataType id="filename"
+                       name="Filename"
+                       contentType="text/plain"
+                       category="summary">
+            <solrField name="filename"
+                       type="string"
+                       required="true"/>
+         </metadataType>
+         
+      </dhus:metadataTypes>
+   </rdf:Description>
+
+   <!-- ENVISAT.ASA_APM_1P, ENVISAT.ASA_IMM_1P and ENVISAT.ASA_WSM_1P  -->
+   <rdf:Description rdf:about="&envisat;productASAR_image">
+      <dhus:support/>
+      <dhus:identifier rdf:parseType="Literal">
+      <![CDATA[
+         fn:tokenize(name (.), '\.')[1]
+      ]]>
+      </dhus:identifier>
+
+      <dhus:metadataExtractor  rdf:parseType="Literal">
+      <![CDATA[
+         <!-- ============================================================== -->
+         <!-- FUNCTIONS                                                      -->
+         <!-- ============================================================== -->
+
+         declare function local:computeSizes ($path, $base as item()*) as item()*
+         {
+            let $product := .
+            return
+               fn:data($product/@size)
+         };
+
+         declare function local:roundHalfDown($arg, $precision) as xs:double*
+         {
+            xs:integer((xs:double($arg)*math:power(10, $precision))) div
+               math:power(10, $precision)
+         };
+
+		declare function local:computeDateTime($date as xs:string?) as xs:string
+		{
+			let $month := substring($date, 4, 3)
+			let $day := substring($date, 1, 2)
+			let $year := substring($date, 8, 4)
+			let $time := substring($date, 13, 12)
+			return
+			if ($month = 'JAN') then
+				concat($year, '-01-', $day, 'T', $time, 'Z')
+			else if ($month = 'FEB') then
+				concat($year, '-02-', $day, 'T', $time, 'Z')
+			else if ($month = 'MAR') then
+				concat($year, '-03-', $day, 'T', $time, 'Z')
+			else if ($month = 'APR') then
+				concat($year, '-04-', $day, 'T', $time, 'Z')
+			else if ($month = 'MAY') then
+				concat($year, '-05-', $day, 'T', $time, 'Z')
+			else if ($month = 'JUN') then
+				concat($year, '-06-', $day, 'T', $time, 'Z')
+			else if ($month = 'JUL') then
+				concat($year, '-07-', $day, 'T', $time, 'Z')
+			else if ($month = 'AUG') then
+				concat($year, '-08-', $day, 'T', $time, 'Z')
+			else if ($month = 'SEP') then
+				concat($year, '-09-', $day, 'T', $time, 'Z')
+			else if ($month = 'OCT') then
+				concat($year, '-10-', $day, 'T', $time, 'Z')
+			else if ($month = 'NOV') then
+				concat($year, '-11-', $day, 'T', $time, 'Z')
+			else
+				concat($year, '-12-', $day, 'T', $time, 'Z')
+		};
+
+	 	 declare function local:coordTrafo($coord as xs:double?) as xs:double*
+   		 {
+   		     let $scale := 1e-6
+   		     let $val := ($coord*$scale)
+   	    	 return $val
+   		 };
+   		 
+         <!-- ============================================================== -->
+         <!-- VARIABLES                                                      -->
+         <!-- ============================================================== -->
+
+         let $name := name()
+         
+         let $sensing_start := local:computeDateTime( fn:data( ./MPH/SENSING_START ) )
+         
+         let $sensing_stop := local:computeDateTime( fn:data( ./MPH/SENSING_STOP ) )
+
+    	 let $lat_1a := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_NEAR_LAT )))
+    	 let $lat_1b := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_MID_LAT )))
+    	 let $lat_1c := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_FAR_LAT )))
+    	 let $lat_2a := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_NEAR_LAT )))
+    	 let $lat_2b := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_MID_LAT )))
+    	 let $lat_2c := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_FAR_LAT )))
+    	 let $lon_1a := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_NEAR_LONG )))
+    	 let $lon_1b := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_MID_LONG )))
+    	 let $lon_1c := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_FAR_LONG )))
+    	 let $lon_2a := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_NEAR_LONG )))
+    	 let $lon_2b := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_MID_LONG )))
+    	 let $lon_2c := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_FAR_LONG )))
+    			
+         return
+         (
+
+         <!-- ============================================================== -->
+         <!-- EXTRACTIONS                                                    -->
+         <!-- ============================================================== -->
+
+         <!-- Indexed metadata -->
+
+         <!-- SATELLITE -->
+         <metadata name="Satellite"
+                   category="summary" type="text/plain">
+            Envisat
+         </metadata>,
+
+         <!-- INSTRUMENT -->
+         <metadata name="Instrument"
+                   category="summary" type="text/plain">
+            ASAR
+         </metadata>,
+         
+         <!-- DATE -->
+         <metadata name="Date"
+                   category="summary" type="text/date+iso8601">
+         { $sensing_start }
+         </metadata>,
+         
+         
+         <!-- acquisition -->
+
+         <!-- SENSING START -->
+         <metadata queryable="beginposition" name="Sensing start"
+                   category="product" type="text/date+iso8601">
+         { $sensing_start }
+         </metadata>,
+
+         <!-- SENSING STOP -->
+         <metadata queryable="endposition" name="Sensing stop"
+                   category="product" type="text/date+iso8601">
+         { $sensing_stop }
+         </metadata>,
+         
+         
+         <!-- footprint -->
+      
+         <!-- GML FOOTPRINT -->
+<!--
+         <metadata
+            queryable="GMLfootprint"
+            category="product"
+            name="Footprint"
+            type="application/gml+xml">
+            <gml:Polygon xmlns:gml="http://www.opengis.net/gml"
+               srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                <gml:outerBoundaryIs>
+                  <gml:LinearRing>
+                     <gml:coordinates>
+                        {
+						 concat($lat_1a,",",$lon_1a," ",
+						        $lat_1b,",",$lon_1b," ", 
+						        $lat_1c,",",$lon_1c," ", 
+						        $lat_2c,",",$lon_2c," ", 
+						        $lat_2b,",",$lon_2b," ", 
+						        $lat_2a,",",$lon_2a," ", 
+						        $lat_1a,",",$lon_1a
+							    )
+                        }
+                     </gml:coordinates>
+                  </gml:LinearRing>
+               </gml:outerBoundaryIs>
+            </gml:Polygon>
+         </metadata>,
+-->
+         
+         <!-- JTS FOOTPRINT -->
+<!--
+         <metadata
+            queryable="footprint"
+            category="product"
+            name="JTS footprint"
+            type="application/jts">
+                        {
+						 concat("POLYGON ((",
+						        $lon_1a," ",$lat_1a,",",
+						        $lon_1b," ",$lat_1b,",", 
+						        $lon_1c," ",$lat_1c,",", 
+						        $lon_2c," ",$lat_2c,",", 
+						        $lon_2b," ",$lat_2b,",", 
+						        $lon_2a," ",$lat_2a,",", 
+						        $lon_1a," ",$lat_1a,
+						        "))"
+							    )
+                        }
+         </metadata>,
+-->
+         
+         
+         <!-- platform -->
+
+         <!-- PLATFORM NAME -->
+         <!--
+         {
+			  if (fn:substring($name, 61, 1) = "N")
+			  then "Envisat"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="platformname" name="Platform name"
+                   category="platform" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- PLATFORM SHORT NAME -->
+         <!--
+         {
+			  if (fn:substring($name, 61, 1) = "N")
+			  then "Envisat"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="platformshortname" name="Platform short name"
+                   category="platform" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- PLATFORM SERIAL IDENTIFIER -->
+         <metadata queryable="platformserialidentifier" name="Platform serial identifier"
+                   category="platform" type="text/plain">
+            1
+         </metadata>,
+
+         <!-- PLATFORM NSSDC IDENTIFIER -->
+         <metadata queryable="platformnssdcidentifier" name="Platform NSSDC identifier"
+                   category="platform" type="text/plain">
+            2002-009A
+         </metadata>,
+
+         
+         <!-- instrument -->
+
+         <!-- INSTRUMENT NAME -->
+         <!--
+         {
+			  if (fn:substring($name, 1, 3) = "ASA")
+			  then "Advance Synthetic Aperture Radar"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="instrumentname" name="Instrument name"
+                   category="instrument" type="text/plain">
+         Advance Synthetic Aperture Radar
+         </metadata>,
+
+         <!-- INSTRUMENT SHORT NAME -->
+         <metadata queryable="instrumentshortname" name="Instrument short name"
+                   category="instrument" type="text/plain">
+         ASAR
+         </metadata>,
+         
+
+         <!-- orbit -->
+
+         <!-- ORBIT NUMBER -->
+         <metadata queryable="orbitnumber" name="Orbit number"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data( ./MPH/ABS_ORBIT )) }
+         </metadata>,
+
+         <!-- RELATIVE ORBIT NUMBER -->
+         <metadata queryable="relativeorbitnumber" name="Relative orbit number"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data( ./MPH/REL_ORBIT )) }
+         </metadata>,
+
+         <!-- CYCLE -->
+         <metadata queryable="cycle" name="Cycle"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data( ./MPH/CYCLE )) }
+         </metadata>,
+
+         <!-- PHASE -->
+         <metadata queryable="phase" name="Phase"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data( ./MPH/PHASE )) }
+         </metadata>,
+         
+         <!-- ORBIT DIRECTION -->
+         <metadata queryable="orbitdirection" name="Orbit direction"
+                   category="product" type="text/plain">
+         { fn:data( ./SPH/PASS ) }
+         </metadata>,
+
+
+         <!-- processing -->
+
+         <!-- PROCESSING LEVEL -->
+         <metadata queryable="processinglevel" name="Processing level"
+                   category="product" type="text/plain">
+         {
+			  if (fn:substring($name, 9, 1) = "1")
+			  then "Level-1B"
+			  else "UNKNOWN"
+         }            
+         </metadata>,
+        
+        
+         <!-- other -->
+         
+         <!-- PRODUCT TYPE -->
+         <metadata queryable="producttype" name="Product type"
+                   category="product" type="text/plain">
+         { fn:substring($name, 1, 10) }
+         </metadata>,
+
+         <!-- PRODUCT DESCRIPTION -->
+         <metadata queryable="productdescription" name="Product description"
+                   category="product" type="text/plain">
+         { fn:data( ./SPH/SPH_DESCRIPTOR ) }
+         </metadata>,
+
+         <!-- SIZE -->
+         <metadata queryable="size" name="Size"
+                   category="summary" type="text/plain">
+         {
+            let $size := xs:double(fn:sum(local:computeSizes(., ())))
+            let $kilo := 1024
+            let $mega := xs:integer($kilo * 1024)
+            let $giga := xs:integer($mega * 1024)
+            let $tera := xs:integer($giga * 1024)
+            let $kilo_size := local:roundHalfDown(($size div $kilo), 2)
+            let $mega_size := local:roundHalfDown(($size div $mega), 2)
+            let $giga_size := local:roundHalfDown(($size div $giga), 2)
+            let $tera_size := local:roundHalfDown(($size div $tera), 2)
+            return
+               if ($size < 1024)
+               then
+                  concat ($size, " bytes")
+               else
+                  if (($size div $kilo) < 1024)
+                  then
+                     concat ($kilo_size, " KB")
+                  else
+                     if (($size div $mega) < 1024)
+                        then
+                           concat ($mega_size, " MB")
+                     else
+                        if (($size div $giga) < 1024)
+                        then
+                           concat ($giga_size, " GB")
+                        else
+                           concat ($tera_size, " TB")
+         }
+         </metadata>,
+         
+         <!-- FORMAT -->
+         <metadata queryable="format" name="Format"
+                   category="product" type="text/plain">
+             ENVISAT-1 Product Format
+         </metadata>,
+         
+         <!-- FILENAME -->
+         <metadata queryable="filename" name="Filename"
+                   category="summary" type="text/plain">
+         { $name }
+         </metadata>
+
+         )
+      ]]>
+      </dhus:metadataExtractor>
+
+   </rdf:Description>   
+   
+
+
+
+
+<!--
+   BASED ON:
+   https://github.com/SentinelDataHub/dhus-sentinel-3/blob/master/src/main/resources/META-INF/sentinel-3.owl
+-->
+   
+
+   <!-- ENVISAT.MERIS.level2 SEN3  -->
+   <rdf:Description rdf:about="&envisat;productMERIS_level2_SEN3">
+      <dhus:metadataTypes rdf:parseType="Literal">
+		  
+         <metadataType id="satellite"
+                       name="Satellite"
+                       contentType="text/plain"
+                       category="summary">
+         </metadataType>
+         
+         <metadataType id="instrument"
+                       name="Instrument"
+                       contentType="text/plain"
+                       category="summary">
+         </metadataType>
+         
+         <metadataType id="date"
+                       name="Date"
+                       contentType="text/date+iso8601"
+                       category="summary">
+         </metadataType>
+         
+         
+         <!-- footprint -->
+         
+         <metadataType id="GMLfootprint"
+                       name="Footprint"
+                       contentType="application/gml+xml"
+                       category="product">
+            <solrField name="gmlfootprint"
+                       type="string"/>
+         </metadataType>
+
+         <metadataType id="footprint"
+                       name="JTS footprint"
+                       contentType="application/jts"
+                       category="product">
+            <solrField name="footprint"
+                       type="location_rpt"/>
+         </metadataType>
+
+
+         <!-- acquisition -->
+
+         <metadataType id="beginPosition"
+                       name="Sensing start"
+                       contentType="text/date+iso8601"
+                       category="product">
+            <solrField name="beginposition"
+                       type="tdate"/>
+         </metadataType>
+
+         <metadataType id="endPosition"
+                       name="Sensing stop"
+                       contentType="text/date+iso8601"
+                       category="product">
+            <solrField name="endposition"
+                       type="tdate"/>
+         </metadataType>
+         
+
+         <!-- platform -->
+
+         <metadataType id="platformName"
+                       name="Platform name"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformShortName"
+                       name="Platform short name"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformshortname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformSerialIdentifier"
+                       name="Platform serial identifier"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformserialidentifier"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformNssdcIdentifier"
+                       name="Platform NSSDC identifier"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformnssdcidentifier"
+                       type="text_general"/>
+         </metadataType>         
+
+
+         <!-- instrument -->
+
+         <metadataType id="instrumentName"
+                       name="Instrument name"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="instrumentname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="instrumentShortName"
+                       name="Instrument short name"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="instrumentshortname"
+                       type="text_general"/>
+         </metadataType>
+
+
+         <!-- orbit -->
+
+         <metadataType id="orbitNumber"
+                       name="Orbit number"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="orbitnumber"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="relativeOrbitNumber"
+                       name="Relative orbit number"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="relativeorbitnumber"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="cycle"
+                       name="Cycle"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="cycle"
+                       type="int"/>
+         </metadataType>
+         
+         <metadataType id="orbitDirection"
+                       name="Orbit direction"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="orbitdirection"
+                       type="text_general"/>
+         </metadataType>
+
+
+         <!-- processing -->
+
+         <metadataType id="processingLevel"
+                       name="Processing level"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="processinglevel"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="generationTime"
+                       name="Generation time"
+                       contentType="text/plain"
+                       category="product">
+         </metadataType>        
+         
+         <!-- other -->        
+         
+         <metadataType id="productType"
+                       name="Product type"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="producttype"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="size"
+                       name="Size"
+                       contentType="text/plain"
+                       category="summary">
+            <solrField name="size"
+                       type="string"/>
+         </metadataType>
+
+
+         <metadataType id="format"
+                       name="Format"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="format"
+                       type="string"
+                       required="true"/>
+         </metadataType>
+         
+         <metadataType id="filename"
+                       name="Filename"
+                       contentType="text/plain"
+                       category="summary">
+            <solrField name="filename"
+                       type="string"
+                       required="true"/>
+         </metadataType>
+         
+      </dhus:metadataTypes>
+   </rdf:Description>
+   
+   <!-- ENVISAT.MERIS.level2 SEN3  -->
+   <rdf:Description rdf:about="&envisat;productMERIS_level2_SEN3">
+      <dhus:support/>
+      <dhus:identifier rdf:parseType="Literal">
+      <![CDATA[
+         fn:tokenize(name (.), '\.')[1]
+      ]]>
+      </dhus:identifier>
+
+      <dhus:metadataExtractor  rdf:parseType="Literal">
+      <![CDATA[
+         <!-- ============================================================== -->
+         <!-- FUNCTIONS                                                      -->
+         <!-- ============================================================== -->
+         declare namespace utils="java:fr.gael.drb.cortex.topic.sentinel3.Sentinel3Utils";
+            
+		 declare function local:computeSizes ($path, $base as item()*) as item()*
+		 {
+			for $child in $path/*
+			return
+			   if ($child/@directory)
+			   then
+				  local:computeSizes ($child, base)
+			   else
+				  data($child/@size), $base
+		 }; 
+
+         declare function local:roundHalfDown($arg, $precision) as xs:double*
+         {
+            xs:integer((xs:double($arg)*math:power(10, $precision))) div
+               math:power(10, $precision)
+         };
+         
+         declare function local:footprint() as xs:string*
+         {
+            fn:data(*[matches (name(), "xfdumanifest.xml")]/XFDU/metadataSection/
+                    metadataObject[@ID="measurementFrameSet"]/metadataWrap/xmlData/
+                    frameSet/footPrint/posList)
+         };         
+
+         <!-- ============================================================== -->
+         <!-- VARIABLES                                                      -->
+         <!-- ============================================================== -->
+
+         let $name := name()
+
+         let $root := ./root
+         let $instrument := fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                                    metadataObject[@ID="platform"]/metadataWrap/xmlData/
+                                    platform/instrument/familyName/@abbreviation)
+                
+         let $VAR_beginPosition := fn:data(xfdumanifest.xml/XFDU/metadataSection/
+										   metadataObject[@ID="acquisitionPeriod"]/metadataWrap/xmlData/
+									       acquisitionPeriod/startTime)
+									       
+         let $VAR_endPosition := fn:data(xfdumanifest.xml/XFDU/metadataSection/
+										 metadataObject[@ID="acquisitionPeriod"]/metadataWrap/xmlData/
+									     acquisitionPeriod/stopTime)
+         
+         
+         return
+         (
+
+         <!-- ============================================================== -->
+         <!-- EXTRACTIONS                                                    -->
+         <!-- ============================================================== -->
+
+         <!-- Indexed metadata -->
+
+         <!-- SATELLITE -->
+         <metadata name="Satellite"
+                   category="summary" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- INSTRUMENT -->
+         <!-- could be:  { $instrument } -->
+         <metadata name="Instrument"
+                   category="summary" type="text/plain">
+         MERIS
+         </metadata>,
+         
+         <!-- DATE -->
+         <metadata name="Date"
+                   category="summary" type="text/date+iso8601">
+         { $VAR_beginPosition }
+         </metadata>,
+      
+      
+         <!-- footprint -->
+      
+         <!-- GML FOOTPRINT -->
+         <metadata
+            queryable="GMLfootprint"
+            category="product"
+            name="Footprint"
+            type="application/gml+xml">
+            <gml:Polygon xmlns:gml="http://www.opengis.net/gml"
+               srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                <gml:outerBoundaryIs>
+                  <gml:LinearRing>
+                     <gml:coordinates>
+                        {
+                         utils:points2GML(local:footprint())
+                        }
+                     </gml:coordinates>
+                  </gml:LinearRing>
+               </gml:outerBoundaryIs>
+            </gml:Polygon>
+         </metadata>,
+         
+         <!-- JTS FOOTPRINT -->
+         <metadata
+            queryable="footprint"
+            category="product"
+            name="JTS footprint"
+            type="application/jts">
+                        {
+                         concat ("POLYGON ((",utils:points2JTS(local:footprint()),"))")
+                        }
+         </metadata>,
+         
+         <!-- acquisition -->
+
+         <!-- SENSING START -->
+         <metadata queryable="beginposition" name="Sensing start"
+                   category="product" type="text/date+iso8601">
+         { $VAR_beginPosition }
+         </metadata>,
+
+         <!-- SENSING STOP -->
+         <metadata queryable="endposition" name="Sensing stop"
+                   category="product" type="text/date+iso8601">
+         { $VAR_endPosition }
+         </metadata>,
+
+
+         <!-- platform -->
+
+         <!-- PLATFORM NAME -->
+         <metadata queryable="platformname" name="Platform name"
+                   category="platform" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- PLATFORM SHORT NAME -->
+         <metadata queryable="platformshortname" name="Platform short name"
+                   category="platform" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- PLATFORM SERIAL IDENTIFIER -->
+         <!-- could be:
+                  {fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                  metadataObject[@ID="platform"]/metadataWrap/xmlData/
+                  platform/number)}
+         -->
+         <metadata queryable="platformserialidentifier" name="Platform serial identifier"
+                   category="platform" type="text/plain">
+         1
+         </metadata>,
+
+         <!-- PLATFORM NSSDC IDENTIFIER -->
+        <!-- could be:
+         {fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                  metadataObject[@ID="platform"]/metadataWrap/xmlData/
+                  platform/nssdcIdentifier)}         
+         -->
+         <metadata queryable="platformnssdcidentifier" name="Platform NSSDC identifier"
+                   category="platform" type="text/plain">
+         2002-009A
+         </metadata>,
+
+         
+         <!-- instrument -->
+
+         <!-- INSTRUMENT NAME -->
+         <metadata queryable="instrumentname" name="Instrument name"
+                   category="instrument" type="text/plain">
+         {fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                  metadataObject[@ID="platform"]/metadataWrap/xmlData/
+                  platform/instrument/familyName)}
+         </metadata>,
+
+         <!-- INSTRUMENT SHORT NAME -->
+         <!-- could be:  { $instrument } -->
+         <metadata queryable="instrumentshortname" name="Instrument short name"
+                   category="instrument" type="text/plain">
+         MERIS
+         </metadata>,
+         
+
+         <!-- orbit -->
+
+         <!-- ORBIT NUMBER -->
+         <metadata queryable="orbitnumber" name="Orbit number"
+                   category="product" type="text/integer">
+         {if (xfdumanifest.xml/XFDU/metadataSection/metadataObject[fn:matches(@ID,".+OrbitReference")]/metadataWrap/xmlData/orbitReference/orbitNumber[@type="start"]) 
+          then 
+                fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                        metadataObject[fn:matches(@ID,".+OrbitReference")]/
+                        metadataWrap/xmlData/orbitReference/orbitNumber[@type="start"]) 
+          else 
+                fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                        metadataObject[fn:matches(@ID,".+OrbitReference")]/
+                        metadataWrap/xmlData/orbitReference/orbitNumber)}
+         </metadata>,
+
+         <!-- RELATIVE ORBIT NUMBER -->
+         <metadata queryable="relativeorbitnumber" name="Relative orbit number"
+                   category="product" type="text/integer">
+		 {let $node:= xfdumanifest.xml/XFDU/metadataSection/
+			                           metadataObject[fn:matches(@ID,".+OrbitReference")]/
+			                           metadataWrap/xmlData/orbitReference/relativeOrbitNumber
+		  return
+		  if ($node[@type="start"]) 
+		  then 
+			  fn:data(xfdumanifest.xml/XFDU/metadataSection/
+			          metadataObject[fn:matches(@ID,".+OrbitReference")]/
+			          metadataWrap/xmlData/orbitReference/relativeOrbitNumber[@type="start"]) 
+		  else 
+		      fn:data(xfdumanifest.xml/XFDU/metadataSection/
+			          metadataObject[fn:matches(@ID,".+OrbitReference")]/
+			          metadataWrap/xmlData/orbitReference/relativeOrbitNumber)}
+         </metadata>,
+
+         <!-- CYCLE -->
+         <metadata queryable="cycle" name="Cycle"
+                   category="product" type="text/integer">
+		 {fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                  metadataObject[fn:matches(@ID,".+OrbitReference")]/
+                  metadataWrap/xmlData/orbitReference/cycleNumber)}
+         </metadata>,
+         
+         <!-- ORBIT DIRECTION -->
+         <metadata queryable="orbitdirection" name="Orbit direction"
+                   category="product" type="text/plain">
+		 {let $node:= xfdumanifest.xml/XFDU/metadataSection/
+                                       metadataObject[fn:matches(@ID,".+OrbitReference")]/
+                                       metadataWrap/xmlData/orbitReference/orbitNumber
+          return
+          if ($node[@type="start"]) 
+          then 
+              fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                      metadataObject[fn:matches(@ID,".+OrbitReference")]/
+                      metadataWrap/xmlData/orbitReference/orbitNumber[@type="start"]/@groundTrackDirection) 
+          else 
+              fn_data(xfdumanifest.xml/XFDU/metadataSection/
+                      metadataObject[fn:matches(@ID,".+OrbitReference")]/
+                      metadataWrap/xmlData/orbitReference/orbitNumber/@groundTrackDirection)}
+         </metadata>,
+         
+  
+         <!-- processing -->
+
+         <!-- PROCESSING LEVEL -->
+         <metadata queryable="processinglevel" name="Processing level"
+                   category="product" type="text/plain">
+         {fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                  metadataObject[@ID="processing"]/
+                  metadataWrap/xmlData/processing/@outputLevel)}         
+         </metadata>,
+
+         <!-- GENERATION TIME -->
+         <metadata name="Generation time"
+                   category="product" type="text/plain">
+         {drb:Iso8601DateFormatter(
+                  fn:data(xfdumanifest.xml/XFDU/metadataSection/
+						  metadataObject[@ID="generalProductInformation"]/metadataWrap/xmlData/
+                          generalProductInformation/creationTime), "yyyyMMdd'T'hhmmss")
+         }  
+         </metadata>,
+       
+
+         <!-- other -->
+         
+         <!-- PRODUCT TYPE -->
+         <metadata queryable="producttype" name="Product type"
+                   category="product" type="text/plain">
+         {fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                  metadataObject[@ID="generalProductInformation"]/metadataWrap/xmlData/
+                  generalProductInformation/productType)}
+         </metadata>,
+
+         <!-- SIZE -->
+         <metadata queryable="size" name="Size"
+                   category="summary" type="text/plain">
+         {
+            let $size := xs:double(fn:data(xfdumanifest.xml/XFDU/metadataSection/
+                                           metadataObject[@ID="generalProductInformation"]/metadataWrap/xmlData/
+                                           generalProductInformation/productSize))
+            return
+               if ($size < 1024)
+               then 
+                  concat ($size, " bytes")
+               else
+                  if (($size div 1024) < 1024)
+                  then
+                     concat (utils:formatNumber($size div 1024), " KB")
+                  else
+                     if (($size div (1024*1024)) < 1024)
+                        then concat (utils:formatNumber($size div (1024*1024)), " MB")
+                     else
+                        if (($size div (1024*1024*1024)) < 1024)
+                        then
+                           concat (utils:formatNumber($size div (1024*1024*1024)), " GB")
+                        else 
+                           concat (utils:formatNumber($size div (1024*1024*1024*1024)), " TB")
+         }
+         </metadata>,
+
+         <!-- FORMAT -->
+         <metadata queryable="format" name="Format"
+                   category="product" type="text/plain">
+         SAFE
+         </metadata>,
+         
+         <!-- FILENAME -->
+         <metadata queryable="filename" name="Filename"
+                   category="summary" type="text/plain">
+         { $name }
+         </metadata>
+
+         )
+      ]]>
+      </dhus:metadataExtractor>
+
+   </rdf:Description>
+   
+
+
+
+
+
+
+
+   
+<!--
+   BASED ON:
+   https://earth.esa.int/documents/700255/2042507/Vol05_Structures_3f_20150831_v1.pdf
+   https://earth.esa.int/documents/700255/1834061/AMALFI_USER_MANUAL.pdf
+   https://earth.esa.int/documents/700255/2042507/AnnexA_Data_Convention_3g_20150831_v2.pdf
+   https://earth.esa.int/documents/700255/707222/Vol11_Meris_6a.pdf/58f5780c-adfd-407f-b924-91603cb5b0d5?version=1.0
+-->
+   
+   <!-- ENVISAT.MER_FRS_2P, ENVISAT.MER_RR__2P  -->
+   <rdf:Description rdf:about="&envisat;productMERIS_level2">
+      <dhus:metadataTypes rdf:parseType="Literal">
+		  
+         <metadataType id="satellite"
+                       name="Satellite"
+                       contentType="text/plain"
+                       category="summary">
+         </metadataType>
+         
+         <metadataType id="instrument"
+                       name="Instrument"
+                       contentType="text/plain"
+                       category="summary">
+         </metadataType>
+         
+         <metadataType id="date"
+                       name="Date"
+                       contentType="text/date+iso8601"
+                       category="summary">
+         </metadataType>
+         
+         
+         <!-- acquisition -->
+
+         <metadataType id="beginPosition"
+                       name="Sensing start"
+                       contentType="text/date+iso8601"
+                       category="product">
+            <solrField name="beginposition"
+                       type="tdate"/>
+         </metadataType>
+
+         <metadataType id="endPosition"
+                       name="Sensing stop"
+                       contentType="text/date+iso8601"
+                       category="product">
+            <solrField name="endposition"
+                       type="tdate"/>
+         </metadataType>
+         
+         
+         <!-- footprint -->
+         
+<!--
+         <metadataType id="GMLfootprint"
+                       name="Footprint"
+                       contentType="application/gml+xml"
+                       category="product">
+            <solrField name="gmlfootprint"
+                       type="string"/>
+         </metadataType>
+
+         <metadataType id="footprint"
+                       name="JTS footprint"
+                       contentType="application/jts"
+                       category="product">
+            <solrField name="footprint"
+                       type="location_rpt"/>
+         </metadataType>
+-->
+
+         <!-- platform -->
+
+         <metadataType id="platformName"
+                       name="Platform name"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformShortName"
+                       name="Platform short name"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformshortname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformSerialIdentifier"
+                       name="Platform serial identifier"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformserialidentifier"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformNssdcIdentifier"
+                       name="Platform NSSDC identifier"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformnssdcidentifier"
+                       type="text_general"/>
+         </metadataType>         
+
+         <!-- instrument -->
+
+         <metadataType id="instrumentName"
+                       name="Instrument name"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="instrumentname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="instrumentShortName"
+                       name="Instrument short name"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="instrumentshortname"
+                       type="text_general"/>
+         </metadataType>
+
+         <!-- orbit -->
+
+         <metadataType id="orbitNumber"
+                       name="Orbit number"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="orbitnumber"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="relativeOrbitNumber"
+                       name="Relative orbit number"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="relativeorbitnumber"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="cycle"
+                       name="Cycle"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="cycle"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="phase"
+                       name="Phase"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="phase"
+                       type="int"/>
+         </metadataType>
+         
+         <!-- processing -->
+
+         <metadataType id="processingLevel"
+                       name="Processing level"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="processinglevel"
+                       type="text_general"/>
+         </metadataType>
+                  
+         <!-- other -->      
+         
+         <metadataType id="productType"
+                       name="Product type"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="producttype"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="productDescription"
+                       name="Product description"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="productdescription"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="size"
+                       name="Size"
+                       contentType="text/plain"
+                       category="summary">
+            <solrField name="size"
+                       type="string"/>
+         </metadataType>
+         
+         <metadataType id="format"
+                       name="Format"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="format"
+                       type="string"
+                       required="true"/>
+         </metadataType>
+         
+         <metadataType id="filename"
+                       name="Filename"
+                       contentType="text/plain"
+                       category="summary">
+            <solrField name="filename"
+                       type="string"
+                       required="true"/>
+         </metadataType>
+         
+      </dhus:metadataTypes>
+   </rdf:Description>
+
+   <!-- ENVISAT.MER_FRS_2P, ENVISAT.MER_RR__2P  -->
+   <rdf:Description rdf:about="&envisat;productMERIS_level2">
+      <dhus:support/>
+      <dhus:identifier rdf:parseType="Literal">
+      <![CDATA[
+         fn:tokenize(name (.), '\.')[1]
+      ]]>
+      </dhus:identifier>
+
+      <dhus:metadataExtractor  rdf:parseType="Literal">
+      <![CDATA[
+         <!-- ============================================================== -->
+         <!-- FUNCTIONS                                                      -->
+         <!-- ============================================================== -->
+
+         declare function local:computeSizes ($path, $base as item()*) as item()*
+         {
+            let $product := .
+            return
+               fn:data($product/@size)
+         };
+
+         declare function local:roundHalfDown($arg, $precision) as xs:double*
+         {
+            xs:integer((xs:double($arg)*math:power(10, $precision))) div
+               math:power(10, $precision)
+         };
+
+		declare function local:computeDateTime($date as xs:string?) as xs:string
+		{
+			let $month := substring($date, 4, 3)
+			let $day := substring($date, 1, 2)
+			let $year := substring($date, 8, 4)
+			let $time := substring($date, 13, 12)
+			return
+			if ($month = 'JAN') then
+				concat($year, '-01-', $day, 'T', $time, 'Z')
+			else if ($month = 'FEB') then
+				concat($year, '-02-', $day, 'T', $time, 'Z')
+			else if ($month = 'MAR') then
+				concat($year, '-03-', $day, 'T', $time, 'Z')
+			else if ($month = 'APR') then
+				concat($year, '-04-', $day, 'T', $time, 'Z')
+			else if ($month = 'MAY') then
+				concat($year, '-05-', $day, 'T', $time, 'Z')
+			else if ($month = 'JUN') then
+				concat($year, '-06-', $day, 'T', $time, 'Z')
+			else if ($month = 'JUL') then
+				concat($year, '-07-', $day, 'T', $time, 'Z')
+			else if ($month = 'AUG') then
+				concat($year, '-08-', $day, 'T', $time, 'Z')
+			else if ($month = 'SEP') then
+				concat($year, '-09-', $day, 'T', $time, 'Z')
+			else if ($month = 'OCT') then
+				concat($year, '-10-', $day, 'T', $time, 'Z')
+			else if ($month = 'NOV') then
+				concat($year, '-11-', $day, 'T', $time, 'Z')
+			else
+				concat($year, '-12-', $day, 'T', $time, 'Z')
+		};
+
+	 	 declare function local:coordTrafo($coord as xs:double?) as xs:double*
+   		 {
+   		     let $scale := 1e-6
+   		     let $val := ($coord*$scale)
+   	    	 return $val
+   		 };
+   		 
+         <!-- ============================================================== -->
+         <!-- VARIABLES                                                      -->
+         <!-- ============================================================== -->
+
+         let $name := name()
+         
+         let $sensing_start := local:computeDateTime( fn:data( ./MPH/SENSING_START ) )
+         
+         let $sensing_stop := local:computeDateTime( fn:data( ./MPH/SENSING_STOP ) )
+
+    	 let $lat_1a := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_FIRST_LAT )))
+    	 let $lat_1b := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_MID_LAT )))
+    	 let $lat_1c := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_LAST_LAT )))
+    	 let $lat_2a := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_FIRST_LAT )))
+    	 let $lat_2b := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_MID_LAT )))
+    	 let $lat_2c := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_LAST_LAT )))
+    	 let $lon_1a := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_FIRST_LONG )))
+    	 let $lon_1b := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_MID_LONG )))
+    	 let $lon_1c := local:coordTrafo(xs:double(fn:data( ./SPH/FIRST_LAST_LONG )))
+    	 let $lon_2a := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_FIRST_LONG )))
+    	 let $lon_2b := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_MID_LONG )))
+    	 let $lon_2c := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_LAST_LONG )))
+    			
+         return
+         (
+
+         <!-- ============================================================== -->
+         <!-- EXTRACTIONS                                                    -->
+         <!-- ============================================================== -->
+
+         <!-- Indexed metadata -->
+
+         <!-- SATELLITE -->
+         <metadata name="Satellite"
+                   category="summary" type="text/plain">
+            Envisat
+         </metadata>,
+
+         <!-- INSTRUMENT -->
+         <metadata name="Instrument"
+                   category="summary" type="text/plain">
+            MERIS
+         </metadata>,
+         
+         <!-- DATE -->
+         <metadata name="Date"
+                   category="summary" type="text/date+iso8601">
+         { $sensing_start }
+         </metadata>,
+         
+         
+         <!-- acquisition -->
+
+         <!-- SENSING START -->
+         <metadata queryable="beginposition" name="Sensing start"
+                   category="product" type="text/date+iso8601">
+         { $sensing_start }
+         </metadata>,
+
+         <!-- SENSING STOP -->
+         <metadata queryable="endposition" name="Sensing stop"
+                   category="product" type="text/date+iso8601">
+         { $sensing_stop }
+         </metadata>,
+         
+         
+         <!-- footprint -->
+      
+         <!-- GML FOOTPRINT -->
+<!--
+         <metadata
+            queryable="GMLfootprint"
+            category="product"
+            name="Footprint"
+            type="application/gml+xml">
+            <gml:Polygon xmlns:gml="http://www.opengis.net/gml"
+               srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                <gml:outerBoundaryIs>
+                  <gml:LinearRing>
+                     <gml:coordinates>
+                        {
+						 concat($lat_1a,",",$lon_1a," ",
+						        $lat_1b,",",$lon_1b," ", 
+						        $lat_1c,",",$lon_1c," ", 
+						        $lat_2c,",",$lon_2c," ", 
+						        $lat_2b,",",$lon_2b," ", 
+						        $lat_2a,",",$lon_2a," ", 
+						        $lat_1a,",",$lon_1a
+							    )
+                        }
+                     </gml:coordinates>
+                  </gml:LinearRing>
+               </gml:outerBoundaryIs>
+            </gml:Polygon>
+         </metadata>,
+-->
+         
+         <!-- JTS FOOTPRINT -->
+<!--
+         <metadata
+            queryable="footprint"
+            category="product"
+            name="JTS footprint"
+            type="application/jts">
+                        {
+						 concat("POLYGON ((",
+						        $lon_1a," ",$lat_1a,",",
+						        $lon_1b," ",$lat_1b,",", 
+						        $lon_1c," ",$lat_1c,",", 
+						        $lon_2c," ",$lat_2c,",", 
+						        $lon_2b," ",$lat_2b,",", 
+						        $lon_2a," ",$lat_2a,",", 
+						        $lon_1a," ",$lat_1a,
+						        "))"
+							    )
+                        }
+         </metadata>,
+-->
+         
+         
+         <!-- platform -->
+
+         <!-- PLATFORM NAME -->
+         <!--
+         {
+			  if (fn:substring($name, 61, 1) = "N")
+			  then "Envisat"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="platformname" name="Platform name"
+                   category="platform" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- PLATFORM SHORT NAME -->
+         <!--
+         {
+			  if (fn:substring($name, 61, 1) = "N")
+			  then "Envisat"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="platformshortname" name="Platform short name"
+                   category="platform" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- PLATFORM SERIAL IDENTIFIER -->
+         <metadata queryable="platformserialidentifier" name="Platform serial identifier"
+                   category="platform" type="text/plain">
+            1
+         </metadata>,
+
+         <!-- PLATFORM NSSDC IDENTIFIER -->
+         <metadata queryable="platformnssdcidentifier" name="Platform NSSDC identifier"
+                   category="platform" type="text/plain">
+            2002-009A
+         </metadata>,
+
+         
+         <!-- instrument -->
+
+         <!-- INSTRUMENT NAME -->
+         <!--
+         {
+			  if (fn:substring($name, 1, 3) = "MER")
+			  then "MEdium Resolution Imaging Spectrometer"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="instrumentname" name="Instrument name"
+                   category="instrument" type="text/plain">
+         MEdium Resolution Imaging Spectrometer
+         </metadata>,
+
+         <!-- INSTRUMENT SHORT NAME -->
+         <metadata queryable="instrumentshortname" name="Instrument short name"
+                   category="instrument" type="text/plain">
+         MERIS
+         </metadata>,
+         
+
+         <!-- orbit -->
+
+         <!-- ORBIT NUMBER -->
+         <metadata queryable="orbitnumber" name="Orbit number"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data( ./MPH/ABS_ORBIT )) }
+         </metadata>,
+
+         <!-- RELATIVE ORBIT NUMBER -->
+         <metadata queryable="relativeorbitnumber" name="Relative orbit number"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data( ./MPH/REL_ORBIT )) }
+         </metadata>,
+
+         <!-- CYCLE -->
+         <metadata queryable="cycle" name="Cycle"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data( ./MPH/CYCLE )) }
+         </metadata>,
+
+         <!-- PHASE -->
+         <metadata queryable="phase" name="Phase"
+                   category="product" type="text/integer">
+         { xs:integer(fn:data( ./MPH/PHASE )) }
+         </metadata>,
+
+
+         <!-- processing -->
+
+         <!-- PROCESSING LEVEL -->
+         <metadata queryable="processinglevel" name="Processing level"
+                   category="product" type="text/plain">
+         {
+			  if (fn:substring($name, 9, 1) = "2")
+			  then "Level-2"
+			  else "UNKNOWN"
+         }            
+         </metadata>,
+        
+        
+         <!-- other -->
+         
+         <!-- PRODUCT TYPE -->
+         <metadata queryable="producttype" name="Product type"
+                   category="product" type="text/plain">
+         { fn:substring($name, 1, 10) }
+         </metadata>,
+
+         <!-- PRODUCT DESCRIPTION -->
+         <metadata queryable="productdescription" name="Product description"
+                   category="product" type="text/plain">
+         { fn:data( ./SPH/SPH_DESCRIPTOR ) }
+         </metadata>,
+
+         <!-- SIZE -->
+         <metadata queryable="size" name="Size"
+                   category="summary" type="text/plain">
+         {
+            let $size := xs:double(fn:sum(local:computeSizes(., ())))
+            let $kilo := 1024
+            let $mega := xs:integer($kilo * 1024)
+            let $giga := xs:integer($mega * 1024)
+            let $tera := xs:integer($giga * 1024)
+            let $kilo_size := local:roundHalfDown(($size div $kilo), 2)
+            let $mega_size := local:roundHalfDown(($size div $mega), 2)
+            let $giga_size := local:roundHalfDown(($size div $giga), 2)
+            let $tera_size := local:roundHalfDown(($size div $tera), 2)
+            return
+               if ($size < 1024)
+               then
+                  concat ($size, " bytes")
+               else
+                  if (($size div $kilo) < 1024)
+                  then
+                     concat ($kilo_size, " KB")
+                  else
+                     if (($size div $mega) < 1024)
+                        then
+                           concat ($mega_size, " MB")
+                     else
+                        if (($size div $giga) < 1024)
+                        then
+                           concat ($giga_size, " GB")
+                        else
+                           concat ($tera_size, " TB")
+         }
+         </metadata>,
+         
+         <!-- FORMAT -->
+         <metadata queryable="format" name="Format"
+                   category="product" type="text/plain">
+             ENVISAT-1 Product Format
+         </metadata>,
+         
+         <!-- FILENAME -->
+         <metadata queryable="filename" name="Filename"
+                   category="summary" type="text/plain">
+         { $name }
+         </metadata>
+
+         )
+      ]]>
+      </dhus:metadataExtractor>
+
+   </rdf:Description>   
+      
+
+
+
+
+   
+   <!-- ENVISAT.ATS_LST_2P  -->
+   <rdf:Description rdf:about="&envisat;productATS_LST_2P">
+      <dhus:metadataTypes rdf:parseType="Literal">
+		  
+         <metadataType id="satellite"
+                       name="Satellite"
+                       contentType="text/plain"
+                       category="summary">
+         </metadataType>
+         
+         <metadataType id="instrument"
+                       name="Instrument"
+                       contentType="text/plain"
+                       category="summary">
+         </metadataType>
+         
+         <metadataType id="date"
+                       name="Date"
+                       contentType="text/date+iso8601"
+                       category="summary">
+         </metadataType>
+         
+         
+         <!-- footprint -->
+         
+         <metadataType id="GMLfootprint"
+                       name="Footprint"
+                       contentType="application/gml+xml"
+                       category="product">
+            <solrField name="gmlfootprint"
+                       type="string"/>
+         </metadataType>
+
+         <metadataType id="footprint"
+                       name="JTS footprint"
+                       contentType="application/jts"
+                       category="product">
+            <solrField name="footprint"
+                       type="location_rpt"/>
+         </metadataType>
+         
+
+         <!-- acquisition -->
+
+         <metadataType id="beginPosition"
+                       name="Sensing start"
+                       contentType="text/date+iso8601"
+                       category="product">
+            <solrField name="beginposition"
+                       type="tdate"/>
+         </metadataType>
+
+         <metadataType id="endPosition"
+                       name="Sensing stop"
+                       contentType="text/date+iso8601"
+                       category="product">
+            <solrField name="endposition"
+                       type="tdate"/>
+         </metadataType>
+         
+
+         <!-- platform -->
+
+         <metadataType id="platformName"
+                       name="Platform name"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformShortName"
+                       name="Platform short name"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformshortname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformSerialIdentifier"
+                       name="Platform serial identifier"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformserialidentifier"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="platformNssdcIdentifier"
+                       name="Platform NSSDC identifier"
+                       contentType="text/plain"
+                       category="platform">
+            <solrField name="platformnssdcidentifier"
+                       type="text_general"/>
+         </metadataType>         
+
+         <!-- instrument -->
+
+         <metadataType id="instrumentName"
+                       name="Instrument name"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="instrumentname"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="instrumentShortName"
+                       name="Instrument short name"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="instrumentshortname"
+                       type="text_general"/>
+         </metadataType>
+
+         <!-- orbit -->
+
+         <metadataType id="orbitNumber"
+                       name="Orbit number"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="orbitnumber"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="relativeOrbitNumber"
+                       name="Relative orbit number"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="relativeorbitnumber"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="cycle"
+                       name="Cycle"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="cycle"
+                       type="int"/>
+         </metadataType>
+
+         <metadataType id="phase"
+                       name="Phase"
+                       contentType="text/integer"
+                       category="product">
+            <solrField name="phase"
+                       type="int"/>
+         </metadataType>
+
+         <!-- processing -->
+
+         <metadataType id="processingCenter"
+                       name="Processing center"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="processingcenter"
+                       type="text_general"/>
+         </metadataType>
+         
+         <metadataType id="processingLevel"
+                       name="Processing level"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="processinglevel"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="generationTime"
+                       name="Generation time"
+                       contentType="text/plain"
+                       category="product">
+         </metadataType>                  
+         
+         <!-- other -->        
+         
+         <metadataType id="productType"
+                       name="Product type"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="producttype"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="productDescription"
+                       name="Product description"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="productdescription"
+                       type="text_general"/>
+         </metadataType>
+
+         <metadataType id="size"
+                       name="Size"
+                       contentType="text/plain"
+                       category="summary">
+            <solrField name="size"
+                       type="string"/>
+         </metadataType>
+
+         <metadataType id="format"
+                       name="Format"
+                       contentType="text/plain"
+                       category="product">
+            <solrField name="format"
+                       type="string"
+                       required="true"/>
+         </metadataType>
+         
+         <metadataType id="filename"
+                       name="Filename"
+                       contentType="text/plain"
+                       category="summary">
+            <solrField name="filename"
+                       type="string"
+                       required="true"/>
+         </metadataType>
+         
+      </dhus:metadataTypes>
+   </rdf:Description>
+   
+<!--
+https://earth.esa.int/documents/10174/1415229/ATSR_UOL_LST_L2_User_Guide_v1-0
+-->
+
+   <!-- ENVISAT.ATS_LST_2P  -->
+   <rdf:Description rdf:about="&envisat;productATS_LST_2P">
+      <dhus:support/>
+      <dhus:identifier rdf:parseType="Literal">
+      <![CDATA[
+         fn:tokenize(name (.), '\.')[1]
+      ]]>
+      </dhus:identifier>
+
+      <dhus:metadataExtractor  rdf:parseType="Literal">
+      <![CDATA[
+         <!-- ============================================================== -->
+         <!-- FUNCTIONS                                                      -->
+         <!-- ============================================================== -->
+
+         declare function local:computeSizes ($path, $base as item()*) as item()*
+         {
+            let $product := .
+            return
+               fn:data($product/@size)
+         };
+
+         declare function local:roundHalfDown($arg, $precision) as xs:double*
+         {
+            xs:integer((xs:double($arg)*math:power(10, $precision))) div
+               math:power(10, $precision)
+         };
+
+         declare function local:computedateTime ($inputDate as xs:string?,
+                                                 $iscreation as xs:boolean?) as xs:string
+         {
+            let $date := (
+                          if ($iscreation)
+                          then
+						     concat(substring($inputDate, 7, 4),
+                             "-",
+                             substring($inputDate, 4, 2),
+                             "-",
+                             substring($inputDate, 1, 2),
+                             "T",
+                             substring($inputDate, 12, 8),
+                             ".",
+                             substring($inputDate, 21, 4),
+                             "Z")
+                          else    
+						     concat(substring($inputDate, 1, 10),
+						     "T",
+              		         substring($inputDate, 12, 8),
+                             ".",
+                             substring($inputDate, 21, 6),
+                             "000Z")
+                         )
+            return $date         
+         };
+
+		 declare function local:lon360to180($lon360 as xs:double?) as xs:double?
+		 {
+		 	let $lon180 := ($lon360 + 180) mod 360
+	 		return ($lon180 - 180)
+	 	 };         
+
+	 	 declare function local:getIndices($count as xs:double?,
+	 	                                   $reverse as xs:boolean?) as item()*
+   		 {
+		 let $step := (
+					   if (xs:integer($count div 200) = 0)
+				       then 1
+					   else xs:integer($count div 200)
+					  )
+   		 let $indices1 := (
+			for $index in (1 to $count) 
+    			where $index mod $step = 0
+    			return $index 
+    			)
+   		 let $indices2 := (
+			for $index in (1 to $count) 
+				let $i := xs:integer($count - $index + 1)
+    			where $i mod $step = 0
+    			return $i 
+    			)
+    	 return
+    	     if ($reverse)
+    	     then ($count,$indices2,1)
+    	     else (1,$indices1,$count)
+   		 };	 	 
+
+	 	 declare function local:getGmlFootprint($lats as item()*, 
+	 	                                        $lons as item()*) as xs:string
+   		 {
+	   	 let $count := count($lats) 
+		 return
+			fn:string-join(
+		 		(
+				for $index in (1 to $count) 
+				return 
+				concat(local:truncateDecimal($lats[$index]),
+					   ",",
+					   local:truncateDecimal($lons[$index]))
+				)," ")
+   		 };
+   		 
+	 	 declare function local:getJtsFootprint($lats as item()*, 
+	 	                                        $lons as item()*) as xs:string
+   		 {
+	   	 let $count := count($lats) 
+		 return
+		 concat(
+            "POLYGON ((",
+			fn:string-join(
+		 		(
+				for $index in (1 to $count) 
+				return 
+				concat(local:truncateDecimal($lons[$index]),
+					   " ",
+					   local:truncateDecimal($lats[$index]))
+				),","),
+			"))"
+			)
+   		 };   	  
+   		                         
+		 declare function local:truncateDecimal($num as xs:double?) as xs:string?
+		 {
+		    let $precision := 4
+			let $int := fn:tokenize(xs:string($num),'\.')[1]
+			let $dec := fn:substring(fn:tokenize(xs:string($num),'\.')[2],1,$precision)
+			return concat($int,".",$dec)
+		 };	 	                                      
+
+         <!-- ============================================================== -->
+         <!-- VARIABLES                                                      -->
+         <!-- ============================================================== -->
+
+         let $name := name()
+
+         let $identifier := fn:tokenize(name (.), '\.')[1]
+         let $tarFile := ./*[name(.) = fn:concat( $identifier, ".tar")]
+         let $ncFile := $tarFile/*[name(.) = fn:concat( $identifier, ".nc")]
+         let $root := $ncFile/root
+         
+         let $product_ID := fn:substring($name, 1, 10)
+	     let $processing_stage_flag := fn:substring($name, 11, 1)
+	     let $originator_ID := fn:substring($name, 12, 3)
+	     let $start_day := fn:substring($name, 15, 8)
+	     let $start_time := fn:substring($name, 24, 6)
+	     let $duration := xs:integer(fn:substring($name, 31, 8))
+	     let $phase := xs:integer(fn:substring($name, 39, 1))
+	     let $cycle := xs:integer(fn:substring($name, 40, 3))
+	     let $relative_orbit := xs:integer(fn:substring($name, 44, 5))
+	     let $absolute_orbit := xs:integer(fn:substring($name, 50, 5))
+	     let $counter := xs:integer(fn:substring($name, 56, 4))
+	     let $extension := fn:substring($name, 60, 3)
+         
+         let $VAR_productGenerationCentre := fn:substring($name, 82, 3)
+         
+         let $VAR_classIdPlatform := fn:substring($name, 86, 1)
+         
+         let $VAR_classIdTimeliness := fn:substring($name, 88, 2)
+         
+         let $VAR_classIdBaseline := fn:substring($name, 91, 3)
+         
+         let $VAR_beginPosition := local:computedateTime(
+                 fn:data($root/attributes/*[name(.) = "start_time"]),
+                 xs:boolean("false"))
+                 
+         let $VAR_endPosition := local:computedateTime(
+                 fn:data($root/attributes/*[name(.) = "stop_time"]),
+                 xs:boolean("false"))
+                 
+         let $VAR_creationTime := local:computedateTime(
+                 fn:data($root/attributes/*[name(.) = "date_created"]),
+                 xs:boolean("true"))
+
+         let $count := fn:data($root/dimensions/nj)
+         
+		 let $lons1 := (
+		   for $i in local:getIndices($count,xs:boolean("false"))
+			  return fn:data($root/dataset/lon/time[1]/nj[$i]/ni)[1] )
+			  
+		 let $lons2 := (
+		   for $i in local:getIndices($count,xs:boolean("true"))
+			  return fn:data($root/dataset/lon/time[1]/nj[$i]/ni)[last()] )
+			  
+		 let $lats1 := (
+		   for $i in local:getIndices($count,xs:boolean("false"))
+			  return fn:data($root/dataset/lat/time[1]/nj[$i]/ni)[1] )
+			  
+		 let $lats2 := (
+		   for $i in local:getIndices($count,xs:boolean("true"))
+			  return fn:data($root/dataset/lat/time[1]/nj[$i]/ni)[last()] )
+			  
+		 let $lons := ( $lons1, $lons2, $lons1[1] )
+		 let $lats := ( $lats1, $lats2, $lats1[1] )
+          
+         return
+         (
+
+         <!-- ============================================================== -->
+         <!-- EXTRACTIONS                                                    -->
+         <!-- ============================================================== -->
+
+         <!-- Indexed metadata -->
+
+         <!-- SATELLITE -->
+         <!-- could be: { fn:data($root/attributes/*[name(.) = "platform"]) }  -->
+         <metadata name="Satellite"
+                   category="summary" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- INSTRUMENT -->
+         <!-- could be: { fn:data($root/attributes/*[name(.) = "sensor"]) }  -->
+         <metadata name="Instrument"
+                   category="summary" type="text/plain">
+         AATSR
+         </metadata>,
+         
+         <!-- DATE -->
+         <metadata name="Date"
+                   category="summary" type="text/date+iso8601">
+         { $VAR_beginPosition }
+         </metadata>,
+      
+         <!-- GML FOOTPRINT -->
+         <metadata
+            queryable="GMLfootprint"
+            category="product"
+            name="Footprint"
+            type="application/gml+xml">
+            <gml:Polygon xmlns:gml="http://www.opengis.net/gml"
+               srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+                <gml:outerBoundaryIs>
+                  <gml:LinearRing>
+                     <gml:coordinates>
+                        {
+                        local:getGmlFootprint($lats,$lons)
+                        }
+                     </gml:coordinates>
+                  </gml:LinearRing>
+               </gml:outerBoundaryIs>
+            </gml:Polygon>
+         </metadata>,
+         
+         <!-- JTS FOOTPRINT -->
+         <metadata
+            queryable="footprint"
+            category="product"
+            name="JTS footprint"
+            type="application/jts">
+                        {
+                        local:getJtsFootprint($lats,$lons)
+                        }
+         </metadata>,
+         
+         
+         <!-- acquisition -->
+
+         <!-- SENSING START -->
+         <metadata queryable="beginposition" name="Sensing start"
+                   category="product" type="text/date+iso8601">
+         { $VAR_beginPosition }
+         </metadata>,
+
+         <!-- SENSING STOP -->
+         <metadata queryable="endposition" name="Sensing stop"
+                   category="product" type="text/date+iso8601">
+         { $VAR_endPosition }
+         </metadata>,
+
+         <!-- platform -->
+
+         <!-- PLATFORM NAME -->
+         <!-- could be: { fn:data($root/attributes/*[name(.) = "platform"]) }  -->
+         <metadata queryable="platformname" name="Platform name"
+                   category="platform" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- PLATFORM SHORT NAME -->
+         <!-- could be: { fn:data($root/attributes/*[name(.) = "platform"]) }  -->
+         <metadata queryable="platformshortname" name="Platform short name"
+                   category="platform" type="text/plain">
+         Envisat
+         </metadata>,
+
+         <!-- PLATFORM SERIAL IDENTIFIER -->
+         <metadata queryable="platformserialidentifier" name="Platform serial identifier"
+                   category="platform" type="text/plain">
+            1
+         </metadata>,
+
+         <!-- PLATFORM NSSDC IDENTIFIER -->
+         <metadata queryable="platformnssdcidentifier" name="Platform NSSDC identifier"
+                   category="platform" type="text/plain">
+            2002-009A
+         </metadata>,
+
+         <!-- instrument -->
+
+         <!-- INSTRUMENT NAME -->
+         <!-- could be:
+         {
+			  if (fn:data($root/attributes/*[name(.) = "sensor"]) = "AATSR")
+			  then "Advanced Along-Track Scanning Radiometer"
+			  else "UNKNOWN"
+         }
+         -->
+         <metadata queryable="instrumentname" name="Instrument name"
+                   category="instrument" type="text/plain">
+         Advanced Along-Track Scanning Radiometer
+         </metadata>,
+
+         <!-- INSTRUMENT SHORT NAME -->
+         <!-- could be: { fn:data($root/attributes/*[name(.) = "sensor"]) }  -->
+         <metadata queryable="instrumentshortname" name="Instrument short name"
+                   category="instrument" type="text/plain">
+         AATSR
+         </metadata>,
+
+         <!-- orbit -->
+
+         <!-- ORBIT NUMBER -->
+         <metadata queryable="orbitnumber" name="Orbit number"
+                   category="product" type="text/integer">
+         { $absolute_orbit }
+         </metadata>,
+
+         <!-- RELATIVE ORBIT NUMBER -->
+         <metadata queryable="relativeorbitnumber" name="Relative orbit number"
+                   category="product" type="text/integer">
+         { $relative_orbit }
+         </metadata>,
+
+         <!-- CYCLE -->
+         <metadata queryable="cycle" name="Cycle"
+                   category="product" type="text/integer">
+         { $cycle }
+         </metadata>,
+
+         <!-- PHASE -->
+         <metadata queryable="phase" name="Phase"
+                   category="product" type="text/integer">
+         { $phase }
+         </metadata>,
+
+         <!-- processing -->
+
+         <!-- PROCESSING CENTER -->
+         <metadata queryable="processingcenter" name="Processing center"
+                   category="product" type="text/plain">
+         { $originator_ID }
+         </metadata>,
+         
+         <!-- PROCESSING LEVEL -->
+         <metadata queryable="processinglevel" name="Processing level"
+                   category="product" type="text/plain">
+         Level-2
+         </metadata>,
+
+         <!-- GENERATION TIME -->
+         <metadata name="Generation time"
+                   category="product" type="text/plain">
+         { $VAR_creationTime }
+         </metadata>,
+
+         <!-- other -->
+
+         <!-- PRODUCT TYPE -->
+         <metadata queryable="producttype" name="Product type"
+                   category="product" type="text/plain">
+         { fn:data($root/attributes/*[name(.) = "source"]) }
+         </metadata>,
+
+         <!-- PRODUCT DESCRIPTION -->
+         <metadata queryable="productdescription" name="Product description"
+                   category="product" type="text/plain">
+         { fn:data($root/attributes/*[name(.) = "title"]) }
+         </metadata>,
+
+         <!-- SIZE -->
+         <metadata queryable="size" name="Size"
+                   category="summary" type="text/plain">
+         {
+            let $size := xs:double(fn:sum(local:computeSizes(., ())))
+            let $kilo := 1024
+            let $mega := xs:integer($kilo * 1024)
+            let $giga := xs:integer($mega * 1024)
+            let $tera := xs:integer($giga * 1024)
+            let $kilo_size := local:roundHalfDown(($size div $kilo), 2)
+            let $mega_size := local:roundHalfDown(($size div $mega), 2)
+            let $giga_size := local:roundHalfDown(($size div $giga), 2)
+            let $tera_size := local:roundHalfDown(($size div $tera), 2)
+            return
+               if ($size < 1024)
+               then
+                  concat ($size, " bytes")
+               else
+                  if (($size div $kilo) < 1024)
+                  then
+                     concat ($kilo_size, " KB")
+                  else
+                     if (($size div $mega) < 1024)
+                        then
+                           concat ($mega_size, " MB")
+                     else
+                        if (($size div $giga) < 1024)
+                        then
+                           concat ($giga_size, " GB")
+                        else
+                           concat ($tera_size, " TB")
+         }
+         </metadata>,
+                  
+         <!-- FORMAT -->
+         <metadata queryable="format" name="Format"
+                   category="product" type="text/plain">
+         netCDF
+         </metadata>,
+         
+         <!-- FILENAME -->
+         <metadata queryable="filename" name="Filename"
+                   category="summary" type="text/plain">
+         { $name }
+         </metadata>
+
+         )
+      ]]>
+      </dhus:metadataExtractor>
+
+   </rdf:Description>
+   
+
+
+
+
+   
+   
+
+</rdf:RDF>
+
+
+
