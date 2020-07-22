@@ -621,13 +621,16 @@
          <!-- processing -->
 
          <!-- PROCESSING LEVEL -->
-         <metadata queryable="processinglevel" name="Processing level"
-                   category="product" type="text/plain">
+<!--         
          {
 			  if ($VAR_level = "2")
 			  then "Level-2"
 			  else "UNKNOWN"
          }            
+-->         
+         <metadata queryable="processinglevel" name="Processing level"
+                   category="product" type="text/plain">
+         Level-2
          </metadata>,
 
          <!-- GENERATION TIME -->
@@ -641,7 +644,13 @@
          <!-- PRODUCT TYPE -->
          <metadata queryable="producttype" name="Product type"
                    category="product" type="text/plain">
-         { $VAR_dataTypeId }
+         { 
+               if ($VAR_dataTypeId = "GDR___")
+               then "RA2_GDR_2P"
+               else if ($VAR_dataTypeId = "MWS___")
+               then "RA2_MWS_2P"
+               else "UNKNOWN"
+         }
          </metadata>,
 
          <!-- PRODUCT DESCRIPTION -->
@@ -760,7 +769,6 @@
                        type="tdate"/>
          </metadataType>
          
-         
          <!-- footprint -->
          
          <metadataType id="GMLfootprint"
@@ -832,6 +840,30 @@
                        type="text_general"/>
          </metadataType>
 
+         <metadataType id="polarisation"
+                       name="Polarisation"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="polarisation"
+                       type="text_general"/>
+         </metadataType>   
+         
+         <metadataType id="polarisationMode"
+                       name="Polarisation Mode"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="polarisationmode"
+                       type="text_general"/>
+         </metadataType>      
+         
+         <metadataType id="swathIdentifier"
+                       name="Instrument swath"
+                       contentType="text/plain"
+                       category="instrument">
+            <solrField name="swathidentifier"
+                       type="text_general"/>
+         </metadataType>
+         
          <!-- orbit -->
 
          <metadataType id="orbitNumber"
@@ -1022,6 +1054,32 @@
     	 let $lon_2b := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_MID_LONG )))
     	 let $lon_2c := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_FAR_LONG )))
     			
+         let $pol1w := fn:data( ./SPH/MDS1_TX_RX_POLAR )
+         let $pol2w := fn:data( ./SPH/MDS2_TX_RX_POLAR )
+		  
+       	 let $pol1 := (
+			if (fn:matches($pol1w, "H/V"))
+			then "H/V"
+			else if (fn:matches($pol1w, "H/H"))
+			then "H/H"
+			else if (fn:matches($pol1w, "V/H"))
+			then "V/H"
+			else if (fn:matches($pol1w, "V/V"))
+			then "V/V"
+			else ""
+			)
+		 let $pol2 := (
+			if (fn:matches($pol2w, "H/V"))
+			then "H/V"
+			else if (fn:matches($pol2w, "H/H"))
+			then "H/H"
+			else if (fn:matches($pol2w, "V/H"))
+			then "V/H"
+			else if (fn:matches($pol2w, "V/V"))
+			then "V/V"
+			else ""
+			)
+          
          return
          (
 
@@ -1177,6 +1235,41 @@
          ASAR
          </metadata>,
          
+         <!-- POLARISATION -->
+         <metadata queryable="polarisation" name="Polarisation"
+                   category="instrument" type="text/plain">
+         {         
+           fn:concat($pol1,
+                     " ",
+                     $pol2)
+         }
+         </metadata>,
+         
+         <!-- POLARISATION MODE -->
+         <metadata queryable="polarisationmode" name="Polarisation Mode"
+                   category="instrument" type="text/plain">
+         {  
+           if ( ($pol1 = "H/H") and ($pol2 = "") )
+	       then "S"
+           else if ( ($pol1 = "V/V") and ($pol2 = "") )
+	       then "S"
+           else if ( ($pol1 = "V/H") and ($pol2 = "H/V") )
+	       then "D"
+           else if ( ($pol1 = "H/V") and ($pol2 = "V/H") )
+	       then "D"
+           else if ( ($pol1 = "H/H") and ($pol2 = "V/V") )
+	       then "A"
+           else if ( ($pol1 = "V/V") and ($pol2 = "H/H") )
+	       then "A"
+	       else ""
+         }
+         </metadata>,
+ 
+         <!-- SWATH IDENTIFIER -->
+         <metadata queryable="swathidentifier" name="Instrument swath"
+                   category="instrument" type="text/plain">
+         {  fn:data( ./SPH/SWATH ) }
+         </metadata>,
 
          <!-- orbit -->
 
@@ -1214,13 +1307,16 @@
          <!-- processing -->
 
          <!-- PROCESSING LEVEL -->
-         <metadata queryable="processinglevel" name="Processing level"
-                   category="product" type="text/plain">
+<!--          
          {
 			  if (fn:substring($name, 9, 1) = "1")
 			  then "Level-1B"
 			  else "UNKNOWN"
-         }            
+         }       
+-->
+         <metadata queryable="processinglevel" name="Processing level"
+                   category="product" type="text/plain">
+         Level-1       
          </metadata>,
         
         
@@ -1746,8 +1842,9 @@
 		 {let $node:= xfdumanifest.xml/XFDU/metadataSection/
                                        metadataObject[fn:matches(@ID,".+OrbitReference")]/
                                        metadataWrap/xmlData/orbitReference/orbitNumber
-          return
-          if ($node[@type="start"]) 
+          let $odir :=
+          (
+          if ($node[@type="start"])
           then 
               fn:data(xfdumanifest.xml/XFDU/metadataSection/
                       metadataObject[fn:matches(@ID,".+OrbitReference")]/
@@ -1755,18 +1852,29 @@
           else 
               fn_data(xfdumanifest.xml/XFDU/metadataSection/
                       metadataObject[fn:matches(@ID,".+OrbitReference")]/
-                      metadataWrap/xmlData/orbitReference/orbitNumber/@groundTrackDirection)}
+                      metadataWrap/xmlData/orbitReference/orbitNumber/@groundTrackDirection)
+          )
+          return
+          if ($odir = "ascending")
+          then "ASCENDING"
+          else if ($odir = "descending")
+          then "DESCENDING"
+          else "UNKNOWN"
+         }
          </metadata>,
          
   
          <!-- processing -->
 
          <!-- PROCESSING LEVEL -->
-         <metadata queryable="processinglevel" name="Processing level"
-                   category="product" type="text/plain">
+<!--          
          {fn:data(xfdumanifest.xml/XFDU/metadataSection/
                   metadataObject[@ID="processing"]/
-                  metadataWrap/xmlData/processing/@outputLevel)}         
+                  metadataWrap/xmlData/processing/@outputLevel)}     
+-->
+         <metadata queryable="processinglevel" name="Processing level"
+                   category="product" type="text/plain">
+         Level-2      
          </metadata>,
 
          <!-- GENERATION TIME -->
@@ -1783,11 +1891,14 @@
          <!-- other -->
          
          <!-- PRODUCT TYPE -->
-         <metadata queryable="producttype" name="Product type"
-                   category="product" type="text/plain">
+<!--  
          {fn:data(xfdumanifest.xml/XFDU/metadataSection/
                   metadataObject[@ID="generalProductInformation"]/metadataWrap/xmlData/
-                  generalProductInformation/productType)}
+                  generalProductInformation/productType)}         
+-->
+         <metadata queryable="producttype" name="Product type"
+                   category="product" type="text/plain">
+         MER_FRS_2P
          </metadata>,
 
          <!-- SIZE -->
@@ -2018,6 +2129,7 @@
                        type="text_general"/>
          </metadataType>
 
+<!--
          <metadataType id="productDescription"
                        name="Product description"
                        contentType="text/plain"
@@ -2025,6 +2137,7 @@
             <solrField name="productdescription"
                        type="text_general"/>
          </metadataType>
+-->  
 
          <metadataType id="size"
                        name="Size"
@@ -2330,15 +2443,17 @@
 
 
          <!-- processing -->
-
-         <!-- PROCESSING LEVEL -->
-         <metadata queryable="processinglevel" name="Processing level"
-                   category="product" type="text/plain">
+<!--
          {
 			  if (fn:substring($name, 9, 1) = "2")
 			  then "Level-2"
 			  else "UNKNOWN"
-         }            
+         }          
+-->
+         <!-- PROCESSING LEVEL -->
+         <metadata queryable="processinglevel" name="Processing level"
+                   category="product" type="text/plain">
+         Level-2        
          </metadata>,
         
         
@@ -2351,10 +2466,12 @@
          </metadata>,
 
          <!-- PRODUCT DESCRIPTION -->
+<!--
          <metadata queryable="productdescription" name="Product description"
                    category="product" type="text/plain">
          { fn:data( ./SPH/SPH_DESCRIPTOR ) }
-         </metadata>,
+         </metadata>,  
+-->
 
          <!-- SIZE -->
          <metadata queryable="size" name="Size"
@@ -3002,9 +3119,12 @@ https://earth.esa.int/documents/10174/1415229/ATSR_UOL_LST_L2_User_Guide_v1-0
          <!-- other -->
 
          <!-- PRODUCT TYPE -->
+<!--         
+         { fn:data($root/attributes/*[name(.) = "source"]) }
+-->         
          <metadata queryable="producttype" name="Product type"
                    category="product" type="text/plain">
-         { fn:data($root/attributes/*[name(.) = "source"]) }
+         ATS_LST_2P
          </metadata>,
 
          <!-- PRODUCT DESCRIPTION -->
