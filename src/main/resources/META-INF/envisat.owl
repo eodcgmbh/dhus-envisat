@@ -419,28 +419,57 @@
          let $VAR_lat_offset := xs:float(fn:data($root/variables/lat_01/attributes/add_offset))
          let $VAR_lon_offset := xs:float(fn:data($root/variables/lon_01/attributes/add_offset))
          
-         let $count := fn:count($lats_all)
          let $offset := 0.001
-         
+		 		 
+		 let $axis_name := fn:data($root/variables/lon_01/axisName)		                   
+		 let $count_all := fn:data( $root/variables/lon_01/shape )
+		                  
 		 let $lons1 := (
-					    for $i in local:getIndices($count,xs:boolean("false"))
-						    return local:lon360to180( $lons_all[$i] * $VAR_lon_scale + $VAR_lon_offset)
+					    for $i in local:getIndices($count_all,xs:boolean("false"))
+						    return local:lon360to180( fn:data( $root/dataset/lon_01/*[name(.) = $axis_name] )[$i] * $VAR_lon_scale + $VAR_lon_offset )
 					   )
-		 let $lons2 := (
-					    for $i in local:getIndices($count,xs:boolean("true"))
-						    return local:lon360to180( $lons_all[$i] * $VAR_lon_scale + $VAR_lon_offset + $offset )
-					   )
+					   
+         let $count_final := fn:count($lons1)
+         
+         let $lons2 := (
+                        for $index in (1 to $count_final) 
+                            let $i := xs:integer($count_final - $index + 1)
+                            return $lons1[$i] + $offset
+                       )
+         
 		 let $lats1 := (
-					    for $i in local:getIndices($count,xs:boolean("false"))
-						    return $lats_all[$i] * $VAR_lat_scale + $VAR_lat_offset
+					    for $i in local:getIndices($count_all,xs:boolean("false"))
+						    return fn:data( $root/dataset/lat_01/*[name(.) = $axis_name] )[$i] * $VAR_lat_scale + $VAR_lat_offset 
 					   )
-		 let $lats2 := (
-					    for $i in local:getIndices($count,xs:boolean("true"))
-						    return $lats_all[$i] * $VAR_lat_scale + $VAR_lat_offset
+         
+         let $lats2 := (
+                        for $index in (1 to $count_final) 
+                            let $i := xs:integer($count_final - $index + 1)
+                            return $lats1[$i]
+                       )
+         
+         let $lats1mod := (
+					    for $lat in $lats1
+						    return 
+						        if ( $lat > 85.05115 )
+						        then 85.0511
+						        else if ( $lat < -85.05115 )
+						        then -85.0511
+						        else $lat
+					   )
+		 let $lats2mod := (
+					    for $lat in $lats2
+						    return 
+						        if ( $lat > 85.05115 )
+						        then 85.0510
+						        else if ( $lat < -85.05115 )
+						        then -85.0510
+						        else $lat
 					   )
 			  
 		 let $lons := ( $lons1, $lons2, $lons1[1] )
 		 let $lats := ( $lats1, $lats2, $lats1[1] )
+		 let $latsmod := ( $lats1mod, $lats2mod, $lats1mod[1] )
          
          return
          (
@@ -510,7 +539,7 @@
             name="JTS footprint"
             type="application/jts">
                         {
-                        local:getJtsFootprint($lats,$lons)
+                        local:getJtsFootprint($latsmod,$lons)
                         }
          </metadata>,
          
