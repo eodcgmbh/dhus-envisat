@@ -327,7 +327,9 @@
     			return $i 
     			)
     	 return
-    	     if ($reverse)
+    	     if ($count = 1)
+    	     then (1,1)
+    	     else if ($reverse)
     	     then ($count,$indices2,1)
     	     else (1,$indices1,$count)
    		 };	 	 
@@ -467,10 +469,22 @@
 						        else $lat
 					   )
 			  
-		 let $lons := ( $lons1, $lons2, $lons1[1] )
-		 let $lats := ( $lats1, $lats2, $lats1[1] )
-		 let $latsmod := ( $lats1mod, $lats2mod, $lats1mod[1] )
-         
+		 let $lons := (
+					   if ($count_all = 1)
+				       then ( $lons1[1], $lons1[1], $lons1[1] + $offset, $lons1[1] + $offset, $lons1[1] )
+					   else ( $lons1, $lons2, $lons1[1] )
+					  )
+		 let $lats := (
+					   if ($count_all = 1)
+				       then ( $lats1[1], $lats1[1] + $offset, $lats1[1] + $offset, $lats1[1], $lats1[1] )
+					   else ( $lats1, $lats2, $lats1[1] )
+					  )
+		 let $latsmod := (
+					   if ($count_all = 1)
+				       then ( $lats1mod[1], $lats1mod[1] + $offset, $lats1mod[1] + $offset, $lats1mod[1], $lats1mod[1] )
+					   else ( $lats1mod, $lats2mod, $lats1mod[1] )
+					  )
+					           
          return
          (
 
