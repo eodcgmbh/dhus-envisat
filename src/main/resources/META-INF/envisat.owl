@@ -1341,7 +1341,9 @@
          <!-- PHASE -->
          <metadata queryable="phase" name="Phase"
                    category="product" type="text/integer">
-         { xs:integer(fn:data( ./MPH/PHASE )) }
+         { if (fn:data( ./MPH/PHASE ) = 'X')
+           then ''
+           else xs:integer(fn:data( ./MPH/PHASE )) }
          </metadata>,
          
          <!-- ORBIT DIRECTION -->

@@ -9,7 +9,7 @@
 	<groupId>eu.eodc.dhus</groupId>
     <artifactId>dhus-addon-envisat</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 
     <name>DHuS - Envisat Addon</name>
 
