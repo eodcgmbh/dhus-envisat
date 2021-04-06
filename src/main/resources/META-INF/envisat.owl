@@ -1100,6 +1100,49 @@
     	 let $lon_2a := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_NEAR_LONG )))
     	 let $lon_2b := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_MID_LONG )))
     	 let $lon_2c := local:coordTrafo(xs:double(fn:data( ./SPH/LAST_FAR_LONG )))
+    	 
+         let $lat_1amod := (
+                            if ( $lat_1a > 85.05115 )
+						    then 85.0511
+						    else if ( $lat_1a < -85.05115 )
+						    then -85.0511
+						    else $lat_1a
+					       )
+         let $lat_1bmod := (
+                            if ( $lat_1b > 85.05115 )
+						    then 85.0511
+						    else if ( $lat_1b < -85.05115 )
+						    then -85.0511
+						    else $lat_1b
+					       )
+         let $lat_1cmod := (
+                            if ( $lat_1c > 85.05115 )
+						    then 85.0511
+						    else if ( $lat_1c < -85.05115 )
+						    then -85.0511
+						    else $lat_1c
+					       )
+         let $lat_2amod := (
+                            if ( $lat_2a > 85.05115 )
+						    then 85.0510
+						    else if ( $lat_2a < -85.05115 )
+						    then -85.0510
+						    else $lat_2a
+					       )
+         let $lat_2bmod := (
+                            if ( $lat_2b > 85.05115 )
+						    then 85.0510
+						    else if ( $lat_2b < -85.05115 )
+						    then -85.0510
+						    else $lat_2b
+					       )
+         let $lat_2cmod := (
+                            if ( $lat_2c > 85.05115 )
+						    then 85.0510
+						    else if ( $lat_2c < -85.05115 )
+						    then -85.0510
+						    else $lat_2c
+					       )
     			
          let $pol1w := fn:data( ./SPH/MDS1_TX_RX_POLAR )
          let $pol2w := fn:data( ./SPH/MDS2_TX_RX_POLAR )
@@ -1207,13 +1250,13 @@
             type="application/jts">
                         {
 						 concat("POLYGON ((",
-						        $lon_1a," ",$lat_1a,",",
-						        $lon_1b," ",$lat_1b,",", 
-						        $lon_1c," ",$lat_1c,",", 
-						        $lon_2c," ",$lat_2c,",", 
-						        $lon_2b," ",$lat_2b,",", 
-						        $lon_2a," ",$lat_2a,",", 
-						        $lon_1a," ",$lat_1a,
+						        $lon_1a," ",$lat_1amod,",",
+						        $lon_1b," ",$lat_1bmod,",", 
+						        $lon_1c," ",$lat_1cmod,",", 
+						        $lon_2c," ",$lat_2cmod,",", 
+						        $lon_2b," ",$lat_2bmod,",", 
+						        $lon_2a," ",$lat_2amod,",", 
+						        $lon_1a," ",$lat_1amod,
 						        "))"
 							    )
                         }
